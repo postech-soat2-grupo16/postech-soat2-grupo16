@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joaocampari/postech-soat2-grupo16/helpers/database"
+	"github.com/joaocampari/postech-soat2-grupo16/infrastructure/database"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/handlers/product"
 	_ "github.com/lib/pq"

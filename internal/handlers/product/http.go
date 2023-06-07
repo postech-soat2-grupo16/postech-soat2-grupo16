@@ -6,11 +6,12 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases"
 )
 
 type Handler struct {
-	useCase usecases.ProductUseCase
+	useCase ports.ProductUseCase
 }
 
 func NewHandler(useCase usecases.ProductUseCase, r *chi.Mux) *Handler {
