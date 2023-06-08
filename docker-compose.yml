@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  fastfood_app:
+    container_name: fastfood_app
+    image: joaocampari/postech-soat2-grupo16:1.0.0
+    build: .
+    environment:
+      DATABASE_URL: "host=fastfood_db user=postgres password=postgres dbname=postgres sslmode=disable"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - fastfood_db
+  fastfood_db:
+    container_name: fastfood_db
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migration/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
