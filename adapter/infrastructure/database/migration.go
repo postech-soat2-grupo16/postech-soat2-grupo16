@@ -6,7 +6,6 @@ import (
 )
 
 func DoMigration(db *gorm.DB) {
-	db.AutoMigrate(domain.Product{})
 	db.AutoMigrate(domain.Cliente{})
 	db.AutoMigrate(domain.Item{})
 	db.AutoMigrate(domain.Pedido{})

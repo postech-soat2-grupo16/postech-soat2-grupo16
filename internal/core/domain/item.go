@@ -1,6 +1,16 @@
 package domain
 
-import "gorm.io/gorm"
+import (
+	"golang.org/x/exp/slices"
+	"gorm.io/gorm"
+)
+
+const (
+	bebida         = "BEBIDA"
+	lanche         = "LANCHE"
+	sobremesa      = "SOBREMESA"
+	acompanhamento = "ACOMPANHAMENTO"
+)
 
 type Item struct {
 	gorm.Model
@@ -12,5 +22,6 @@ type Item struct {
 }
 
 func (i *Item) IsCategoryValid() bool {
-	return i.Category == ""
+	categories := []string{bebida, lanche, sobremesa, acompanhamento}
+	return slices.Contains(categories, i.Category)
 }

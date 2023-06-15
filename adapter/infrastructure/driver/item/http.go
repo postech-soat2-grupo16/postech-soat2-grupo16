@@ -1,7 +1,8 @@
-package product
+package item
 
 import (
 	"encoding/json"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"net/http"
 	"strconv"
 
@@ -10,12 +11,12 @@ import (
 )
 
 type Handler struct {
-	useCase ports.ProductUseCase
+	useCase ports.ItemUseCase
 }
 
-func NewHandler(useCase ports.ProductUseCase, r *chi.Mux) *Handler {
+func NewHandler(useCase ports.ItemUseCase, r *chi.Mux) *Handler {
 	handler := Handler{useCase: useCase}
-	r.Route("/products", func(r chi.Router) {
+	r.Route("/items", func(r chi.Router) {
 		r.Get("/", handler.GetAll())
 		r.Post("/", handler.Create())
 		r.Get("/{id}", handler.GetById())
@@ -27,11 +28,11 @@ func NewHandler(useCase ports.ProductUseCase, r *chi.Mux) *Handler {
 
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		products, err := h.useCase.List()
+		items, err := h.useCase.List()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(products)
+		json.NewEncoder(w).Encode(items)
 	}
 }
 
@@ -43,39 +44,45 @@ func (h *Handler) GetById() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		product, err := h.useCase.GetById(uint32(id))
+		item, err := h.useCase.GetById(uint32(id))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		if product == nil {
+		if item == nil {
 			w.WriteHeader(http.StatusNotFound)
+			return
 		}
-		json.NewEncoder(w).Encode(product)
+		json.NewEncoder(w).Encode(item)
 	}
 }
 
 func (h *Handler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var p Product
-		err := json.NewDecoder(r.Body).Decode(&p)
+		var i Item
+		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		product, err := h.useCase.Create(p.Name, p.Category, p.Description)
+		item, err := h.useCase.Create(i.Name, i.Category, i.Description, i.Price)
 		if err != nil {
+			if util.IsDomainError(err) {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(err)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(product)
+		json.NewEncoder(w).Encode(item)
 	}
 }
 
 func (h *Handler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var p Product
-		err := json.NewDecoder(r.Body).Decode(&p)
+		var i Item
+		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -86,13 +93,18 @@ func (h *Handler) Update() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		product, err := h.useCase.Update(uint32(id), p.Name, p.Category, p.Description)
+		item, err := h.useCase.Update(uint32(id), i.Name, i.Category, i.Description, i.Price)
 		if err != nil {
+			if util.IsDomainError(err) {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(err)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(product)
+		json.NewEncoder(w).Encode(item)
 	}
 }
 
