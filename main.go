@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	database2 "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/database"
-	producthandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/product"
-	product "github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/product"
+	producthandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/item"
+	item "github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/item"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -28,9 +28,9 @@ func main() {
 func MapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Injections
 	// Use cases
-	productUseCase := product.NewProductUseCase(orm)
+	itemUseCase := item.NewItemUseCase(orm)
 	// Handler
-	_ = producthandler.NewHandler(productUseCase, r)
+	_ = producthandler.NewHandler(itemUseCase, r)
 }
 
 func commonMiddleware(next http.Handler) http.Handler {
