@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joaocampari/postech-soat2-grupo16/infrastructure/database"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/handlers/product"
+	database2 "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/database"
+	producthandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/product"
+	product "github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/product"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
 func main() {
-	dialector := database.GetPostgresDialector()
-	db := database.NewORM(dialector)
+	dialector := database2.GetPostgresDialector()
+	db := database2.NewORM(dialector)
 
-	database.DoMigration(db)
+	database2.DoMigration(db)
 
 	r := chi.NewRouter()
 	r.Use(commonMiddleware)
@@ -28,9 +28,9 @@ func main() {
 func MapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Injections
 	// Use cases
-	productUseCase := usecases.NewProductUseCase(orm)
+	productUseCase := product.NewProductUseCase(orm)
 	// Handler
-	_ = product.NewHandler(productUseCase, r)
+	_ = producthandler.NewHandler(productUseCase, r)
 }
 
 func commonMiddleware(next http.Handler) http.Handler {
