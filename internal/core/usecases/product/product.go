@@ -1,14 +1,11 @@
-package usecases
+package product
 
 import (
 	"log"
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
 	"gorm.io/gorm"
 )
-
-var _ ports.ProductUseCase = (*ProductUseCase)(nil)
 
 func NewProductUseCase(productRepo *gorm.DB) ProductUseCase {
 	return ProductUseCase{

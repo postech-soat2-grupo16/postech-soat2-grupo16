@@ -7,14 +7,13 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases"
 )
 
 type Handler struct {
 	useCase ports.ProductUseCase
 }
 
-func NewHandler(useCase usecases.ProductUseCase, r *chi.Mux) *Handler {
+func NewHandler(useCase ports.ProductUseCase, r *chi.Mux) *Handler {
 	handler := Handler{useCase: useCase}
 	r.Route("/products", func(r chi.Router) {
 		r.Get("/", handler.GetAll())
