@@ -2,6 +2,7 @@ package item
 
 import (
 	"encoding/json"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"net/http"
 	"strconv"
 
@@ -49,6 +50,7 @@ func (h *Handler) GetById() http.HandlerFunc {
 		}
 		if item == nil {
 			w.WriteHeader(http.StatusNotFound)
+			return
 		}
 		json.NewEncoder(w).Encode(item)
 	}
@@ -64,6 +66,11 @@ func (h *Handler) Create() http.HandlerFunc {
 		}
 		item, err := h.useCase.Create(i.Name, i.Category, i.Description, i.Price)
 		if err != nil {
+			if util.IsDomainError(err) {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(err)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -88,6 +95,11 @@ func (h *Handler) Update() http.HandlerFunc {
 		}
 		item, err := h.useCase.Update(uint32(id), i.Name, i.Category, i.Description, i.Price)
 		if err != nil {
+			if util.IsDomainError(err) {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(err)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
