@@ -47,6 +47,27 @@ func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
 	return &item, nil
 }
 
+func (p ItemUseCase) GetByCategory(category string) (*domain.Item, error) {
+	item := domain.Item{
+		Category: category,
+	}
+
+	if !item.IsCategoryValid() {
+		return nil, util.NewErrorDomain("Categoria inválida")
+	}
+
+	result := p.itemRepo.Find(&item)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		log.Println(result.Error)
+		return nil, result.Error
+	}
+
+	return &item, nil
+}
+
 func (p ItemUseCase) Create(name, category, description string, price float32) (*domain.Item, error) {
 	item := domain.Item{
 		Name:        name,

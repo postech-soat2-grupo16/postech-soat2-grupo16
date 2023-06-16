@@ -2,9 +2,10 @@ package item
 
 import (
 	"encoding/json"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
@@ -28,11 +29,22 @@ func NewHandler(useCase ports.ItemUseCase, r *chi.Mux) *Handler {
 
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		items, err := h.useCase.List()
+		var result interface{}
+		var err error
+		if r.URL.Query().Get("category") != "" {
+			result, err = h.useCase.GetByCategory(r.URL.Query().Get("category"))
+		} else {
+			result, err = h.useCase.List()
+		}
 		if err != nil {
+			if util.IsDomainError(err) {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(err)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(items)
+		json.NewEncoder(w).Encode(result)
 	}
 }
 

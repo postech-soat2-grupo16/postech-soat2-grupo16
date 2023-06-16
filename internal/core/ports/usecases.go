@@ -6,6 +6,7 @@ type ItemUseCase interface {
 	List() ([]domain.Item, error)
 	Create(name, category, description string, price float32) (*domain.Item, error)
 	GetByID(itemID uint32) (*domain.Item, error)
+	GetByCategory(category string) (*domain.Item, error)
 	Update(itemID uint32, name, category, description string, price float32) (*domain.Item, error)
 	Delete(itemID uint32) error
 }
