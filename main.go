@@ -7,7 +7,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	database2 "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/database"
 	itemHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/item"
+	pedidoHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/pedido"
 	item "github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/item"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/pedido"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -22,15 +24,17 @@ func main() {
 	r.Use(commonMiddleware)
 	MapRoutes(r, db)
 
-	log.Fatal(http.ListenAndServe(":8000", r))
+	log.Println(http.ListenAndServe(":8000", r))
 }
 
 func MapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Injections
 	// Use cases
 	itemUseCase := item.NewItemUseCase(orm)
+	pedidoUseCase := pedido.NewPedidoUseCase(orm)
 	// Handler
 	_ = itemHandler.NewHandler(itemUseCase, r)
+	_ = pedidoHandler.NewHandler(pedidoUseCase, r)
 }
 
 func commonMiddleware(next http.Handler) http.Handler {

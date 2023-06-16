@@ -9,7 +9,7 @@ import (
 func NewORM(dialector gorm.Dialector) *gorm.DB {
 	db, err := gorm.Open(dialector)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return db
 }
