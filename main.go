@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/cliente"
 	"log"
 	"net/http"
+
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/cliente"
 
 	"github.com/go-chi/chi/v5"
 	database2 "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/database"
@@ -33,17 +34,13 @@ func MapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Injections
 	// Use cases
 	itemUseCase := item.NewItemUseCase(orm)
-<<<<<<< HEAD
 	pedidoUseCase := pedido.NewPedidoUseCase(orm)
+	clienteUseCase := cliente.NewClienteUseCase(orm)
+
 	// Handler
 	_ = itemHandler.NewHandler(itemUseCase, r)
 	_ = pedidoHandler.NewHandler(pedidoUseCase, r)
-=======
-	clienteUseCase := cliente.NewClienteUseCase(orm)
-	// Handler
-	_ = itemHandler.NewHandler(itemUseCase, r)
 	_ = clienteHandler.NewHandler(clienteUseCase, r)
->>>>>>> 37d6cbb91f882f1191b64906486bae2ad2b3f017
 }
 
 func commonMiddleware(next http.Handler) http.Handler {
