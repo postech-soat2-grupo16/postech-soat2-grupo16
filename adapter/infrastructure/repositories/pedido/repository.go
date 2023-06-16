@@ -28,7 +28,10 @@ func (p PedidoRepository) Save(pedido domain.Pedido) (*domain.Pedido, error) {
 
 func (p PedidoRepository) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
 	pedido.ID = pedidoID
-	result := p.orm.Updates(pedido)
+	for i, _ := range pedido.Items {
+		pedido.Items[i].PedidoID = pedidoID
+	}
+	result := p.orm.Session(&gorm.Session{FullSaveAssociations: false}).Updates(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return nil, result.Error

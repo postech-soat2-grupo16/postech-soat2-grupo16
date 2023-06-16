@@ -12,6 +12,8 @@ type GenericRepository interface {
 	Delete(value interface{}, conds ...interface{}) (tx *gorm.DB)
 	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
 	Preload(query string, args ...interface{}) (tx *gorm.DB)
+	Save(value interface{}) (tx *gorm.DB)
+	Session(config *gorm.Session) *gorm.DB
 }
 
 type PedidoRepository interface {
