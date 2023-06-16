@@ -2,9 +2,10 @@ package item
 
 import (
 	"errors"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"log"
 	"strings"
+
+	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 	"gorm.io/gorm"
@@ -23,7 +24,7 @@ type ItemUseCase struct {
 func (p ItemUseCase) List() (items []domain.Item, err error) {
 	result := p.itemRepo.Find(&items)
 	if result.Error != nil {
-		log.Fatal(result.Error)
+		log.Println(result.Error)
 		return items, result.Error
 	}
 
@@ -39,7 +40,7 @@ func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
-		log.Fatal(result.Error)
+		log.Println(result.Error)
 		return nil, result.Error
 	}
 
@@ -60,7 +61,7 @@ func (p ItemUseCase) Create(name, category, description string, price float32) (
 
 	result := p.itemRepo.Create(&item)
 	if result.Error != nil {
-		log.Fatal(result.Error)
+		log.Println(result.Error)
 		return nil, result.Error
 	}
 	return &item, nil
@@ -81,7 +82,7 @@ func (p ItemUseCase) Update(itemID uint32, name, category, description string, p
 
 	result := p.itemRepo.Updates(&item)
 	if result.Error != nil {
-		log.Fatal(result.Error)
+		log.Println(result.Error)
 		return nil, result.Error
 	}
 	return &item, nil
@@ -93,7 +94,7 @@ func (p ItemUseCase) Delete(itemID uint32) error {
 	}
 	result := p.itemRepo.Delete(&item)
 	if result.Error != nil {
-		log.Fatal(result.Error)
+		log.Println(result.Error)
 		return result.Error
 	}
 

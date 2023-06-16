@@ -9,4 +9,5 @@ func DoMigration(db *gorm.DB) {
 	db.AutoMigrate(domain.Cliente{})
 	db.AutoMigrate(domain.Item{})
 	db.AutoMigrate(domain.Pedido{})
+	db.AutoMigrate(domain.PedidoItem{})
 }

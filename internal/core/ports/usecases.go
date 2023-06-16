@@ -10,6 +10,14 @@ type ItemUseCase interface {
 	Delete(itemID uint32) error
 }
 
+type PedidoUseCase interface {
+	List() ([]domain.Pedido, error)
+	Create(pedido domain.Pedido) (*domain.Pedido, error)
+	GetById(pedidoID uint32) (*domain.Pedido, error)
+	Update(pedido domain.Pedido) (*domain.Pedido, error)
+	Delete(pedidoID uint32) error
+}
+
 type ClienteUseCase interface {
 	List() ([]domain.Cliente, error)
 	Create(email, cpf, nome string) (*domain.Cliente, error)
