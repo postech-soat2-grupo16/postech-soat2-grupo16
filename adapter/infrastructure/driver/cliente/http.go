@@ -1,22 +1,21 @@
-package item
+package cliente
 
 import (
 	"encoding/json"
+	"github.com/go-chi/chi/v5"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"net/http"
 	"strconv"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
 )
 
 type Handler struct {
-	useCase ports.ItemUseCase
+	useCase ports.ClienteUseCase
 }
 
-func NewHandler(useCase ports.ItemUseCase, r *chi.Mux) *Handler {
+func NewHandler(useCase ports.ClienteUseCase, r *chi.Mux) *Handler {
 	handler := Handler{useCase: useCase}
-	r.Route("/items", func(r chi.Router) {
+	r.Route("/clientes", func(r chi.Router) {
 		r.Get("/", handler.GetAll())
 		r.Post("/", handler.Create())
 		r.Get("/{id}", handler.GetById())
@@ -28,11 +27,11 @@ func NewHandler(useCase ports.ItemUseCase, r *chi.Mux) *Handler {
 
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		items, err := h.useCase.List()
+		clientes, err := h.useCase.List()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(items)
+		json.NewEncoder(w).Encode(clientes)
 	}
 }
 
@@ -44,27 +43,27 @@ func (h *Handler) GetById() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		item, err := h.useCase.GetByID(uint32(id))
+		cliente, err := h.useCase.GetByID(uint32(id))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		if item == nil {
+		if cliente == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		json.NewEncoder(w).Encode(item)
+		json.NewEncoder(w).Encode(cliente)
 	}
 }
 
 func (h *Handler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var i Item
+		var i Cliente
 		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		item, err := h.useCase.Create(i.Name, i.Category, i.Description, i.Price)
+		cliente, err := h.useCase.Create(i.Email, i.CPF, i.Nome)
 		if err != nil {
 			if util.IsDomainError(err) {
 				w.WriteHeader(http.StatusUnprocessableEntity)
@@ -75,13 +74,13 @@ func (h *Handler) Create() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(item)
+		json.NewEncoder(w).Encode(cliente)
 	}
 }
 
 func (h *Handler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var i Item
+		var i Cliente
 		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -93,7 +92,7 @@ func (h *Handler) Update() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		item, err := h.useCase.Update(uint32(id), i.Name, i.Category, i.Description, i.Price)
+		cliente, err := h.useCase.Update(uint32(id), i.Email, i.CPF, i.Nome)
 		if err != nil {
 			if util.IsDomainError(err) {
 				w.WriteHeader(http.StatusUnprocessableEntity)
@@ -104,7 +103,7 @@ func (h *Handler) Update() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(item)
+		json.NewEncoder(w).Encode(cliente)
 	}
 }
 

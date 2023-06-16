@@ -30,7 +30,7 @@ func (p ItemUseCase) List() (items []domain.Item, err error) {
 	return items, err
 }
 
-func (p ItemUseCase) GetById(itemID uint32) (*domain.Item, error) {
+func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
 	item := domain.Item{
 		ID: itemID,
 	}
