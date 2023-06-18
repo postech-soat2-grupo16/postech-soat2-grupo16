@@ -25,6 +25,13 @@ func NewHandler(useCase ports.ClienteUseCase, r *chi.Mux) *Handler {
 	return &handler
 }
 
+//	@Summary	Get all clients
+//	@Tags		Clients
+//	@ID			get-all-clients
+//	@Produce	json
+//	@Success	200	{object}	Cliente
+//	@Failure	500
+//	@Router		/clientes [get]
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		clientes, err := h.useCase.List()
@@ -35,6 +42,16 @@ func (h *Handler) GetAll() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Get a client by ID
+//
+//	@Tags		Clients
+//
+//	@ID			get-client-by-id
+//	@Produce	json
+//	@Param		id	path		string	true	"Client ID"
+//	@Success	200	{object}	Cliente
+//	@Failure	404
+//	@Router		/clientes/{id} [get]
 func (h *Handler) GetById() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
@@ -55,6 +72,16 @@ func (h *Handler) GetById() http.HandlerFunc {
 	}
 }
 
+//	@Summary	New client
+//
+//	@Tags		Clients
+//
+//	@ID			create-client
+//	@Produce	json
+//	@Param		data	body		Cliente	true	"Client data"
+//	@Success	200		{object}	Cliente
+//	@Failure	400
+//	@Router		/clientes [post]
 func (h *Handler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i Cliente
@@ -78,6 +105,18 @@ func (h *Handler) Create() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Update a client
+//
+//	@Tags		Clients
+//
+//	@ID			update-client
+//	@Produce	json
+//	@Param		id		path		string	true	"Client ID"
+//	@Param		data	body		Cliente	true	"Client data"
+//	@Success	200		{object}	Cliente
+//	@Failure	404
+//	@Failure	400
+//	@Router		/clientes/{id} [put]
 func (h *Handler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i Cliente
@@ -107,6 +146,16 @@ func (h *Handler) Update() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Delete a client by ID
+//
+//	@Tags		Clients
+//
+//	@ID			delete-client-by-id
+//	@Produce	json
+//	@Param		id	path	string	true	"Client ID"
+//	@Success	204
+//	@Failure	500
+//	@Router		/clientes/{id} [delete]
 func (h *Handler) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")

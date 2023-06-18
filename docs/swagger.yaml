@@ -1,0 +1,365 @@
+definitions:
+  cliente.Cliente:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      nome:
+        type: string
+    type: object
+  item.Item:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  pedido.Pedido:
+    properties:
+      clienteId:
+        type: integer
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/pedido.PedidoItem'
+        type: array
+      notes:
+        type: string
+    type: object
+  pedido.PedidoItem:
+    properties:
+      itemId:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+info:
+  contact:
+    email: support@fastfood.io
+    name: API Support
+    url: http://www.fastfood.io/support
+  description: Here you will find everything you need to have the best possible integration
+    with our APIs.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://fastfood.io/terms/
+  title: Fast Food API
+  version: "1.0"
+paths:
+  /clientes:
+    get:
+      operationId: get-all-clients
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cliente.Cliente'
+        "500":
+          description: Internal Server Error
+      summary: Get all clients
+      tags:
+      - Clients
+    post:
+      operationId: create-client
+      parameters:
+      - description: Client data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cliente.Cliente'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cliente.Cliente'
+        "400":
+          description: Bad Request
+      summary: New client
+      tags:
+      - Clients
+  /clientes/{id}:
+    delete:
+      operationId: delete-client-by-id
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      summary: Delete a client by ID
+      tags:
+      - Clients
+    get:
+      operationId: get-client-by-id
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cliente.Cliente'
+        "404":
+          description: Not Found
+      summary: Get a client by ID
+      tags:
+      - Clients
+    put:
+      operationId: update-client
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Client data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cliente.Cliente'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cliente.Cliente'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Update a client
+      tags:
+      - Clients
+  /items:
+    get:
+      operationId: get-all-items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/item.Item'
+        "500":
+          description: Internal Server Error
+      summary: Get all items
+      tags:
+      - Items
+    post:
+      operationId: create-item
+      parameters:
+      - description: Item data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/item.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/item.Item'
+        "400":
+          description: Bad Request
+      summary: New item
+      tags:
+      - Items
+  /items/{id}:
+    delete:
+      operationId: delete-item-by-id
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      summary: Delete a item by ID
+      tags:
+      - Items
+    get:
+      operationId: get-item-by-id
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/item.Item'
+        "404":
+          description: Not Found
+      summary: Get a item by ID
+      tags:
+      - Items
+    put:
+      operationId: update-item
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Item data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/item.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/item.Item'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Update a item
+      tags:
+      - Items
+  /pedidos:
+    get:
+      operationId: get-all-orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "500":
+          description: Internal Server Error
+      summary: Get all orders
+      tags:
+      - Orders
+    post:
+      operationId: create-order
+      parameters:
+      - description: Order data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pedido.Pedido'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "400":
+          description: Bad Request
+      summary: New order
+      tags:
+      - Orders
+  /pedidos/{id}:
+    delete:
+      operationId: delete-order-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      summary: Delete a order by ID
+      tags:
+      - Orders
+    get:
+      operationId: get-order-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "404":
+          description: Not Found
+      summary: Get a order by ID
+      tags:
+      - Orders
+    put:
+      operationId: update-order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pedido.Pedido'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Update a order
+      tags:
+      - Orders
+swagger: "2.0"
