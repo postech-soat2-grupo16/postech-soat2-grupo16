@@ -29,8 +29,8 @@ import (
 //	@contact.url	http://www.fastfood.io/support
 //	@contact.email	support@fastfood.io
 
-//	@license.name	Apache 2.0
-//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.name	Apache 2.0
+// @license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	dialector := database2.GetPostgresDialector()
 	db := database2.NewORM(dialector)
@@ -52,9 +52,7 @@ func MapRoutes(r *chi.Mux, orm *gorm.DB) {
 	clienteUseCase := cliente.NewClienteUseCase(orm)
 
 	// Handler
-	r.Get("/swagger/*", httpSwagger.Handler(
-	//httpSwagger.URL("/docs/swagger.json"),
-	))
+	r.Get("/swagger/*", httpSwagger.Handler())
 
 	_ = itemHandler.NewHandler(itemUseCase, r)
 	_ = pedidoHandler.NewHandler(pedidoUseCase, r)
