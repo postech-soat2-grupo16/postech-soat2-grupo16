@@ -56,7 +56,7 @@ func (p PedidoUseCase) GetById(pedidoID uint32) (*domain.Pedido, error) {
 }
 
 func (p PedidoUseCase) Update(pedido domain.Pedido) (*domain.Pedido, error) {
-	result := p.repo.Updates(pedido)
+	result := p.repo.Session(&gorm.Session{FullSaveAssociations: false}).Updates(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return nil, result.Error
