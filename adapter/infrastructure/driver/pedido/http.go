@@ -27,6 +27,15 @@ func NewHandler(useCase ports.PedidoUseCase, r *chi.Mux) *Handler {
 	return &handler
 }
 
+//	@Summary	Get all orders
+//
+//	@Tags		Orders
+//
+//	@ID			get-all-orders
+//	@Produce	json
+//	@Success	200	{object}	Pedido
+//	@Failure	500
+//	@Router		/pedidos [get]
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		pedidos, err := h.useCase.List()
@@ -37,6 +46,16 @@ func (h *Handler) GetAll() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Get a order by ID
+//
+//	@Tags		Orders
+//
+//	@ID			get-order-by-id
+//	@Produce	json
+//	@Param		id	path		string	true	"Order ID"
+//	@Success	200	{object}	Pedido
+//	@Failure	404
+//	@Router		/pedidos/{id} [get]
 func (h *Handler) GetById() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
@@ -57,6 +76,16 @@ func (h *Handler) GetById() http.HandlerFunc {
 	}
 }
 
+//	@Summary	New order
+//
+//	@Tags		Orders
+//
+//	@ID			create-order
+//	@Produce	json
+//	@Param		data	body		Pedido	true	"Order data"
+//	@Success	200		{object}	Pedido
+//	@Failure	400
+//	@Router		/pedidos [post]
 func (h *Handler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var p Pedido
@@ -80,6 +109,18 @@ func (h *Handler) Create() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Update a order
+//
+//	@Tags		Orders
+//
+//	@ID			update-order
+//	@Produce	json
+//	@Param		id		path		string	true	"Order ID"
+//	@Param		data	body		Pedido	true	"Order data"
+//	@Success	200		{object}	Pedido
+//	@Failure	404
+//	@Failure	400
+//	@Router		/pedidos/{id} [put]
 func (h *Handler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var p Pedido
@@ -110,6 +151,16 @@ func (h *Handler) Update() http.HandlerFunc {
 	}
 }
 
+//	@Summary	Delete a order by ID
+//
+//	@Tags		Orders
+//
+//	@ID			delete-order-by-id
+//	@Produce	json
+//	@Param		id	path	string	true	"Order ID"
+//	@Success	204
+//	@Failure	500
+//	@Router		/pedidos/{id} [delete]
 func (h *Handler) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
