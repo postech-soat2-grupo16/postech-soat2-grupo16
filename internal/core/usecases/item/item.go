@@ -45,7 +45,7 @@ func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
 	return result, nil
 }
 
-func (p ItemUseCase) GetByCategory(category string) (*domain.Item, error) {
+func (p ItemUseCase) GetByCategory(category string) ([]domain.Item, error) {
 	item := domain.Item{
 		Category: category,
 	}
@@ -57,7 +57,7 @@ func (p ItemUseCase) GetByCategory(category string) (*domain.Item, error) {
 	result, err := p.itemRepo.GetByCategory(category)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+			return []domain.Item{}, nil
 		}
 		log.Println(err)
 		return nil, err

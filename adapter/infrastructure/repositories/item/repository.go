@@ -59,16 +59,17 @@ func (c *ItemRepository) GetByID(itemID uint32) (*domain.Item, error) {
 	return &item, nil
 }
 
-func (c *ItemRepository) GetByCategory(category string) (*domain.Item, error) {
+func (c *ItemRepository) GetByCategory(category string) ([]domain.Item, error) {
 	item := domain.Item{
 		Category: category,
 	}
-	result := c.orm.Find(&item)
+	var items []domain.Item
+	result := c.orm.First(&items, item)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &item, nil
+	return items, nil
 }
 
 func (c *ItemRepository) GetAll() (items []domain.Item, err error) {

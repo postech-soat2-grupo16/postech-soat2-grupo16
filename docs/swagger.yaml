@@ -159,6 +159,11 @@ paths:
   /items:
     get:
       operationId: get-all-items
+      parameters:
+      - description: category search by category
+        in: query
+        name: category
+        type: string
       produces:
       - application/json
       responses:

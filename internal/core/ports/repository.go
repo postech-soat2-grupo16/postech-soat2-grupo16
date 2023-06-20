@@ -38,5 +38,5 @@ type ItemRepository interface {
 	Delete(itemID uint32) error
 	GetByID(itemID uint32) (*domain.Item, error)
 	GetAll() ([]domain.Item, error)
-	GetByCategory(category string) (*domain.Item, error)
+	GetByCategory(category string) ([]domain.Item, error)
 }
