@@ -22,11 +22,20 @@ run-all: ## Run all containers
 kill-all: ## Run all containers
 	@docker-compose down --volumes --remove-orphans
 
+.PHONY: db-reset
 db-reset: ## Reset table registers to initial state (with seeds)
 	@docker exec -u postgres fastfood_db psql fastfood_db postgres -f /migration/seeds/seeds.sql
+
 .PHONY: test
 test: db-reset ## Execute the tests in the development environment
 	@go test ./... -count=1 -race -timeout 2m
+
+.PHONY: lint
+lint: ## Execute syntatic analysis in the code and autofix minor problems
+	@golangci-lint run --fix
+
+.PHONY: ci
+ci: lint test ## Execute the tests and lint commands
 
 .PHONY: db-logs
 db-logs: ## Show database logs
