@@ -1,12 +1,11 @@
 version: '3.9'
-
 services:
   fastfood_app:
     container_name: fastfood_app
     image: joaocampari/postech-soat2-grupo16:1.0.0
     build: .
     environment:
-      DATABASE_URL: "host=fastfood_db user=postgres password=postgres dbname=postgres sslmode=disable"
+      DATABASE_URL: "host=fastfood_db user=postgres password=postgres dbname=fastfood_db sslmode=disable TimeZone=UTC"
     ports:
       - "8000:8000"
     depends_on:
@@ -14,14 +13,16 @@ services:
   fastfood_db:
     container_name: fastfood_db
     image: postgres:15
+    user: postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_DB: fastfood_db
     ports:
       - "5432:5432"
     volumes:
-      - ./migration/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migration/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migration/seeds/seeds.sql:/migration/seeds/seeds.sql
       - postgres-data:/var/lib/postgresql/data
 
 volumes:

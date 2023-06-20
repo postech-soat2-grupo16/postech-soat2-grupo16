@@ -1,0 +1,34 @@
+run:
+  tests: true
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  disable-all: true
+  enable:
+    - unused
+    - dupl
+    - goconst
+    - gocyclo
+    - revive
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - typecheck
+    - unconvert
+    - whitespace
+    - gofmt
+  skip-dirs-use-default: true
+linters-settings:
+  gocyclo:
+    # 30 by default (suggested: 10)
+    min-complexity: 14
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - dupl
+        - gosec
+        - revive
