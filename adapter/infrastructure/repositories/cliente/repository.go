@@ -5,7 +5,6 @@ import (
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type ClienteRepository struct {
@@ -52,7 +51,7 @@ func (c *ClienteRepository) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	cliente := domain.Cliente{
 		ID: clienteID,
 	}
-	result := c.orm.Preload(clause.Associations).Preload("Items.Item").First(&cliente)
+	result := c.orm.First(&cliente)
 	if result.Error != nil {
 		return nil, result.Error
 	}

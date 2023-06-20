@@ -33,5 +33,10 @@ type ClienteRepository interface {
 }
 
 type ItemRepository interface {
-	GenericRepository
+	Save(item domain.Item) (*domain.Item, error)
+	Update(item domain.Item) (*domain.Item, error)
+	Delete(itemID uint32) error
+	GetByID(itemID uint32) (*domain.Item, error)
+	GetAll() ([]domain.Item, error)
+	GetByCategory(category string) (*domain.Item, error)
 }
