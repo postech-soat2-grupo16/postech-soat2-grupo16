@@ -2,45 +2,39 @@ package cliente
 
 import (
 	"errors"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
-	"gorm.io/gorm"
 	"log"
+
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
+	"gorm.io/gorm"
 )
 
 type ClienteUseCase struct {
-	clienteRepo *gorm.DB
+	clienteRepo ports.ClienteRepository
 }
 
-func NewClienteUseCase(clienteRepo *gorm.DB) *ClienteUseCase {
+func NewClienteUseCase(clienteRepo ports.ClienteRepository) *ClienteUseCase {
 	return &ClienteUseCase{
 		clienteRepo: clienteRepo,
 	}
 }
 
-func (p *ClienteUseCase) List() (clientes []domain.Cliente, err error) {
-	result := p.clienteRepo.Find(&clientes)
-	if result.Error != nil {
-		log.Fatal(result.Error)
-		return nil, result.Error
+func (p *ClienteUseCase) List() ([]domain.Cliente, error) {
+	result, err := p.clienteRepo.GetAll()
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
 
-	return clientes, err
+	return result, err
 }
 
 func (p *ClienteUseCase) GetByID(clienteID uint32) (*domain.Cliente, error) {
-	cliente := domain.Cliente{
-		ID: clienteID,
+	result, err := p.clienteRepo.GetByID(clienteID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	result := p.clienteRepo.First(&cliente)
-	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		log.Fatal(result.Error)
-		return nil, result.Error
-	}
-
-	return &cliente, nil
+	return result, nil
 }
 
 func (p *ClienteUseCase) Create(email, cpf, nome string) (*domain.Cliente, error) {
@@ -50,12 +44,12 @@ func (p *ClienteUseCase) Create(email, cpf, nome string) (*domain.Cliente, error
 		Name:  nome,
 	}
 
-	result := p.clienteRepo.Create(&cliente)
-	if result.Error != nil {
-		log.Fatal(result.Error)
-		return nil, result.Error
+	result, err := p.clienteRepo.Save(cliente)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
-	return &cliente, nil
+	return result, nil
 }
 
 func (p *ClienteUseCase) Update(clienteID uint32, email, cpf, nome string) (*domain.Cliente, error) {
@@ -66,23 +60,19 @@ func (p *ClienteUseCase) Update(clienteID uint32, email, cpf, nome string) (*dom
 		Name:  nome,
 	}
 
-	result := p.clienteRepo.Updates(&cliente)
-	if result.Error != nil {
-		log.Fatal(result.Error)
-		return nil, result.Error
+	result, err := p.clienteRepo.Update(cliente)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
-	return &cliente, nil
+	return result, nil
 }
 
 func (p *ClienteUseCase) Delete(clienteID uint32) error {
-	cliente := domain.Cliente{
-		ID: clienteID,
-	}
-
-	result := p.clienteRepo.Delete(&cliente)
-	if result.Error != nil {
-		log.Fatal(result.Error)
-		return result.Error
+	err := p.clienteRepo.Delete(clienteID)
+	if err != nil {
+		log.Fatal(err)
+		return err
 	}
 
 	return nil

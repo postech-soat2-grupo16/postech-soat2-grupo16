@@ -15,7 +15,7 @@ type PedidoUseCase interface {
 	List() ([]domain.Pedido, error)
 	Create(pedido domain.Pedido) (*domain.Pedido, error)
 	GetById(pedidoID uint32) (*domain.Pedido, error)
-	Update(pedido domain.Pedido) (*domain.Pedido, error)
+	Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error)
 	Delete(pedidoID uint32) error
 }
 

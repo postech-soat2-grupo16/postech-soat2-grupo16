@@ -5,20 +5,21 @@ import (
 	"log"
 	"strings"
 
+	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 	"gorm.io/gorm"
 )
 
-func NewItemUseCase(itemRepo *gorm.DB) ItemUseCase {
+func NewItemUseCase(itemRepo ports.ItemRepository) ItemUseCase {
 	return ItemUseCase{
 		itemRepo: itemRepo,
 	}
 }
 
 type ItemUseCase struct {
-	itemRepo *gorm.DB
+	itemRepo ports.ItemRepository
 }
 
 func (p ItemUseCase) List() (items []domain.Item, err error) {
