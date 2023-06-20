@@ -8,6 +8,7 @@ import (
 )
 
 func GetPostgresDialector() gorm.Dialector {
-	pgDialector := postgres.Open(os.Getenv("DATABASE_URL"))
+	connStr := os.Getenv("DATABASE_URL")
+	pgDialector := postgres.Open(connStr)
 	return pgDialector
 }
