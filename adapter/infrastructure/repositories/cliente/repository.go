@@ -61,7 +61,7 @@ func (p ClienteRepository) GetByID(clienteID uint32) (*domain.Cliente, error) {
 }
 
 func (p ClienteRepository) GetAll() (clientes []domain.Cliente, err error) {
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Find(&clientes)
+	result := p.orm.Find(&clientes)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return clientes, result.Error
