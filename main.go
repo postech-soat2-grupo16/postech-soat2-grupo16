@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver"
+	_ "github.com/joaocampari/postech-soat2-grupo16/docs"
 	_ "github.com/lib/pq"
 )
 

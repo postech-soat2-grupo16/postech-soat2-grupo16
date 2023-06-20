@@ -191,6 +191,14 @@ const docTemplate = `{
                 ],
                 "summary": "Get all items",
                 "operationId": "get-all-items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category search by category",
+                        "name": "category",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

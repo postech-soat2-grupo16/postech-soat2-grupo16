@@ -135,8 +135,7 @@ func (h *Handler) Update() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		p.ID = uint32(id)
-		pedido, err := h.useCase.Update(p.ToDomain())
+		pedido, err := h.useCase.Update(uint32(id), p.ToDomain())
 		if err != nil {
 			if util.IsDomainError(err) {
 				w.WriteHeader(http.StatusUnprocessableEntity)

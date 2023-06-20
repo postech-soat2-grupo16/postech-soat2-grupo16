@@ -32,10 +32,14 @@ func NewHandler(useCase ports.ItemUseCase, r *chi.Mux) *Handler {
 //	@Tags		Items
 //
 //	@ID			get-all-items
+//
+// @Param        category    query     string  false  "category search by category"
+//
 //	@Produce	json
-//	@Success	200	{object}	Item
-//	@Failure	500
-//	@Router		/items [get]
+//
+// @Success	200	{object}	Item
+// @Failure	500
+// @Router		/items [get]
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var result interface{}
@@ -57,16 +61,16 @@ func (h *Handler) GetAll() http.HandlerFunc {
 	}
 }
 
-//	@Summary	Get a item by ID
+// @Summary	Get a item by ID
 //
-//	@Tags		Items
+// @Tags		Items
 //
-//	@ID			get-item-by-id
-//	@Produce	json
-//	@Param		id	path		string	true	"Item ID"
-//	@Success	200	{object}	Item
-//	@Failure	404
-//	@Router		/items/{id} [get]
+// @ID			get-item-by-id
+// @Produce	json
+// @Param		id	path		string	true	"Item ID"
+// @Success	200	{object}	Item
+// @Failure	404
+// @Router		/items/{id} [get]
 func (h *Handler) GetById() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
@@ -87,16 +91,16 @@ func (h *Handler) GetById() http.HandlerFunc {
 	}
 }
 
-//	@Summary	New item
+// @Summary	New item
 //
-//	@Tags		Items
+// @Tags		Items
 //
-//	@ID			create-item
-//	@Produce	json
-//	@Param		data	body		Item	true	"Item data"
-//	@Success	200		{object}	Item
-//	@Failure	400
-//	@Router		/items [post]
+// @ID			create-item
+// @Produce	json
+// @Param		data	body		Item	true	"Item data"
+// @Success	200		{object}	Item
+// @Failure	400
+// @Router		/items [post]
 func (h *Handler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i Item
@@ -120,18 +124,18 @@ func (h *Handler) Create() http.HandlerFunc {
 	}
 }
 
-//	@Summary	Update a item
+// @Summary	Update a item
 //
-//	@Tags		Items
+// @Tags		Items
 //
-//	@ID			update-item
-//	@Produce	json
-//	@Param		id		path		string	true	"Item ID"
-//	@Param		data	body		Item	true	"Item data"
-//	@Success	200		{object}	Item
-//	@Failure	404
-//	@Failure	400
-//	@Router		/items/{id} [put]
+// @ID			update-item
+// @Produce	json
+// @Param		id		path		string	true	"Item ID"
+// @Param		data	body		Item	true	"Item data"
+// @Success	200		{object}	Item
+// @Failure	404
+// @Failure	400
+// @Router		/items/{id} [put]
 func (h *Handler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i Item
@@ -161,16 +165,16 @@ func (h *Handler) Update() http.HandlerFunc {
 	}
 }
 
-//	@Summary	Delete a item by ID
+// @Summary	Delete a item by ID
 //
-//	@Tags		Items
+// @Tags		Items
 //
-//	@ID			delete-item-by-id
-//	@Produce	json
-//	@Param		id	path	string	true	"Item ID"
-//	@Success	204
-//	@Failure	500
-//	@Router		/items/{id} [delete]
+// @ID			delete-item-by-id
+// @Produce	json
+// @Param		id	path	string	true	"Item ID"
+// @Success	204
+// @Failure	500
+// @Router		/items/{id} [delete]
 func (h *Handler) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
