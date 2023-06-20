@@ -16,8 +16,8 @@ func NewClienteRepository(orm *gorm.DB) *ClienteRepository {
 	return &ClienteRepository{orm: orm}
 }
 
-func (p ClienteRepository) Save(cliente domain.Cliente) (*domain.Cliente, error) {
-	result := p.orm.Create(&cliente)
+func (c *ClienteRepository) Save(cliente domain.Cliente) (*domain.Cliente, error) {
+	result := c.orm.Create(&cliente)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return nil, result.Error
@@ -26,8 +26,8 @@ func (p ClienteRepository) Save(cliente domain.Cliente) (*domain.Cliente, error)
 	return &cliente, nil
 }
 
-func (p ClienteRepository) Update(cliente domain.Cliente) (*domain.Cliente, error) {
-	result := p.orm.Updates(&cliente)
+func (c *ClienteRepository) Update(cliente domain.Cliente) (*domain.Cliente, error) {
+	result := c.orm.Updates(&cliente)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return nil, result.Error
@@ -35,11 +35,11 @@ func (p ClienteRepository) Update(cliente domain.Cliente) (*domain.Cliente, erro
 	return &cliente, nil
 }
 
-func (p ClienteRepository) Delete(clienteID uint32) error {
+func (c *ClienteRepository) Delete(clienteID uint32) error {
 	cliente := domain.Cliente{
 		ID: clienteID,
 	}
-	result := p.orm.Delete(&cliente)
+	result := c.orm.Delete(&cliente)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return result.Error
@@ -48,11 +48,11 @@ func (p ClienteRepository) Delete(clienteID uint32) error {
 	return nil
 }
 
-func (p ClienteRepository) GetByID(clienteID uint32) (*domain.Cliente, error) {
+func (c *ClienteRepository) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	cliente := domain.Cliente{
 		ID: clienteID,
 	}
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").First(&cliente)
+	result := c.orm.Preload(clause.Associations).Preload("Items.Item").First(&cliente)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -60,8 +60,8 @@ func (p ClienteRepository) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	return &cliente, nil
 }
 
-func (p ClienteRepository) GetAll() (clientes []domain.Cliente, err error) {
-	result := p.orm.Find(&clientes)
+func (c *ClienteRepository) GetAll() (clientes []domain.Cliente, err error) {
+	result := c.orm.Find(&clientes)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return clientes, result.Error

@@ -16,7 +16,7 @@ func NewPedidoRepository(orm *gorm.DB) *PedidoRepository {
 	return &PedidoRepository{orm: orm}
 }
 
-func (p PedidoRepository) Save(pedido domain.Pedido) (*domain.Pedido, error) {
+func (p *PedidoRepository) Save(pedido domain.Pedido) (*domain.Pedido, error) {
 	result := p.orm.Create(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)
@@ -26,7 +26,7 @@ func (p PedidoRepository) Save(pedido domain.Pedido) (*domain.Pedido, error) {
 	return &pedido, nil
 }
 
-func (p PedidoRepository) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
+func (p *PedidoRepository) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
 	pedido.ID = pedidoID
 	for i, _ := range pedido.Items {
 		pedido.Items[i].PedidoID = pedidoID
@@ -39,7 +39,7 @@ func (p PedidoRepository) Update(pedidoID uint32, pedido domain.Pedido) (*domain
 	return &pedido, nil
 }
 
-func (p PedidoRepository) Delete(pedidoID uint32) error {
+func (p *PedidoRepository) Delete(pedidoID uint32) error {
 	pedido := domain.Pedido{
 		ID: pedidoID,
 	}
@@ -52,7 +52,7 @@ func (p PedidoRepository) Delete(pedidoID uint32) error {
 	return nil
 }
 
-func (p PedidoRepository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
+func (p *PedidoRepository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	pedido := domain.Pedido{
 		ID: pedidoID,
 	}
@@ -64,7 +64,7 @@ func (p PedidoRepository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	return &pedido, nil
 }
 
-func (p PedidoRepository) GetAll() (pedidos []domain.Pedido, err error) {
+func (p *PedidoRepository) GetAll() (pedidos []domain.Pedido, err error) {
 	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Find(&pedidos)
 	if result.Error != nil {
 		log.Println(result.Error)
