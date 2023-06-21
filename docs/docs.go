@@ -456,6 +456,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/pedido.Pedido"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Optional Filter by Status",
+                        "name": "status",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -534,6 +540,17 @@ const docTemplate = `{
                 }
             }
         },
+        "pedido.Item": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "pedido.Pedido": {
             "type": "object",
             "properties": {
@@ -546,22 +563,11 @@ const docTemplate = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/pedido.PedidoItem"
+                        "$ref": "#/definitions/pedido.Item"
                     }
                 },
                 "notes": {
                     "type": "string"
-                }
-            }
-        },
-        "pedido.PedidoItem": {
-            "type": "object",
-            "properties": {
-                "itemId": {
-                    "type": "integer"
-                },
-                "quantity": {
-                    "type": "integer"
                 }
             }
         }

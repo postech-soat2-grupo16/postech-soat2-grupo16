@@ -44,3 +44,7 @@ db-logs: ## Show database logs
 .PHONY: app-logs
 app-logs: ## Show application logs
 	@docker logs -f --tail 100 fastfood_app
+
+.PHONY: update-docs
+update-docs: ## Update swagger docs
+	@swag init -d ./  --parseDependency --parseInternal --parseDepth 2 -o docs

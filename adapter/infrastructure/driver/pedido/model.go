@@ -5,13 +5,13 @@ import (
 )
 
 type Pedido struct {
-	ID        uint32       `json:"id"`
-	Items     []PedidoItem `json:"items"`
-	Notes     string       `json:"notes"`
-	ClienteID uint32       `json:"clienteId"`
+	ID        uint32 `json:"id"`
+	Items     []Item `json:"items"`
+	Notes     string `json:"notes"`
+	ClienteID uint32 `json:"clienteId"`
 }
 
-type PedidoItem struct {
+type Item struct {
 	ItemID   uint32 `json:"itemId"`
 	Quantity int    `json:"quantity"`
 }
@@ -34,7 +34,7 @@ func (p *Pedido) ToDomain() domain.Pedido {
 	return domain.Pedido{
 		ID:        p.ID,
 		Items:     p.PedidoItemToDomain(),
-		Status:    domain.PedidoCreated,
+		Status:    domain.StatusPedidoCriado,
 		Notes:     p.Notes,
 		ClienteID: p.ClienteID,
 		Cliente: domain.Cliente{

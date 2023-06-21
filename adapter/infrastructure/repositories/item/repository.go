@@ -64,7 +64,7 @@ func (c *ItemRepository) GetByCategory(category string) ([]domain.Item, error) {
 		Category: category,
 	}
 	var items []domain.Item
-	result := c.orm.First(&items, item)
+	result := c.orm.Find(&items, item)
 	if result.Error != nil {
 		return nil, result.Error
 	}

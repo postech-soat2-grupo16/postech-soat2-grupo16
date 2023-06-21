@@ -45,7 +45,7 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	itemRepository := itemrepo.NewItemRepository(orm)
 	// Use cases
 	itemUseCase := item.NewItemUseCase(itemRepository)
-	pedidoUseCase := pedido.NewPedidoUseCase(pedidoRepository)
+	pedidoUseCase := pedido.NewUseCase(pedidoRepository)
 	clienteUseCase := cliente.NewClienteUseCase(clienteRepository)
 	// Handlers
 	_ = itemHandler.NewHandler(itemUseCase, r)

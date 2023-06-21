@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS pedidos (
 );
 CREATE INDEX idx_pedidos_deleted_at ON pedidos USING btree (deleted_at);
 
-CREATE TABLE IF NOT EXISTS pedidos_items (
-	pedidos_id int8 NULL,
+CREATE TABLE IF NOT EXISTS pedido_items (
+	pedido_id int8 NULL,
 	items_id int8 NULL,
 	quantity int8 NULL,
 	id bigserial NOT NULL,
@@ -46,6 +46,6 @@ CREATE TABLE IF NOT EXISTS pedidos_items (
 	deleted_at timestamptz NULL,
 	CONSTRAINT pedidos_items_pkey PRIMARY KEY (id),
 	CONSTRAINT fk_pedidos_items_items FOREIGN KEY (items_id) REFERENCES items(id),
-	CONSTRAINT fk_pedidos_items FOREIGN KEY (pedidos_id) REFERENCES pedidos(id)
+	CONSTRAINT fk_pedidos_items FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
 );
-CREATE INDEX idx_pedidos_items_deleted_at ON pedidos_items USING btree (deleted_at);
+CREATE INDEX idx_pedidos_items_deleted_at ON pedido_items USING btree (deleted_at);

@@ -64,8 +64,8 @@ func (p *PedidoRepository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	return &pedido, nil
 }
 
-func (p *PedidoRepository) GetAll() (pedidos []domain.Pedido, err error) {
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Find(&pedidos)
+func (p *PedidoRepository) GetAll(conds ...interface{}) (pedidos []domain.Pedido, err error) {
+	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}}).Find(&pedidos, conds...)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return pedidos, result.Error

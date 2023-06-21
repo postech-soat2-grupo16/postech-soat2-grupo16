@@ -8,23 +8,30 @@ import (
 	"gorm.io/gorm"
 )
 
-type PedidoUseCase struct {
+type UseCase struct {
 	pedidoRepository ports.PedidoRepository
 }
 
-func NewPedidoUseCase(repo ports.PedidoRepository) PedidoUseCase {
-	return PedidoUseCase{pedidoRepository: repo}
+func NewUseCase(repo ports.PedidoRepository) UseCase {
+	return UseCase{pedidoRepository: repo}
 }
 
-func (p PedidoUseCase) List() (pedidos []domain.Pedido, err error) {
+func (p UseCase) List(status string) (pedidos []domain.Pedido, err error) {
+	if status != "" {
+		pedido := domain.Pedido{
+			Status: status,
+		}
+		return p.pedidoRepository.GetAll(pedido)
+	}
+
 	return p.pedidoRepository.GetAll()
 }
 
-func (p PedidoUseCase) Create(pedido domain.Pedido) (*domain.Pedido, error) {
+func (p UseCase) Create(pedido domain.Pedido) (*domain.Pedido, error) {
 	return p.pedidoRepository.Save(pedido)
 }
 
-func (p PedidoUseCase) GetById(pedidoID uint32) (*domain.Pedido, error) {
+func (p UseCase) GetById(pedidoID uint32) (*domain.Pedido, error) {
 	pedido, err := p.pedidoRepository.GetByID(pedidoID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
@@ -33,10 +40,10 @@ func (p PedidoUseCase) GetById(pedidoID uint32) (*domain.Pedido, error) {
 	return pedido, nil
 }
 
-func (p PedidoUseCase) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
+func (p UseCase) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
 	return p.pedidoRepository.Update(pedidoID, pedido)
 }
 
-func (p PedidoUseCase) Delete(pedidoID uint32) error {
+func (p UseCase) Delete(pedidoID uint32) error {
 	return p.pedidoRepository.Delete(pedidoID)
 }

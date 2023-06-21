@@ -19,6 +19,13 @@ definitions:
       price:
         type: number
     type: object
+  pedido.Item:
+    properties:
+      itemId:
+        type: integer
+      quantity:
+        type: integer
+    type: object
   pedido.Pedido:
     properties:
       clienteId:
@@ -27,17 +34,10 @@ definitions:
         type: integer
       items:
         items:
-          $ref: '#/definitions/pedido.PedidoItem'
+          $ref: '#/definitions/pedido.Item'
         type: array
       notes:
         type: string
-    type: object
-  pedido.PedidoItem:
-    properties:
-      itemId:
-        type: integer
-      quantity:
-        type: integer
     type: object
 info:
   contact:
@@ -353,6 +353,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/pedido.Pedido'
+      - description: Optional Filter by Status
+        in: query
+        name: status
+        type: string
       produces:
       - application/json
       responses:
