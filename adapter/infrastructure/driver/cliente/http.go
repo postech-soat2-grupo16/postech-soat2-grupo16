@@ -132,6 +132,16 @@ func (h *Handler) Update() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+
+		existingCliente, err := h.useCase.GetByID(uint32(id))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		if existingCliente == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
 		cliente, err := h.useCase.Update(uint32(id), i.Email, i.CPF, i.Nome)
 		if err != nil {
 			if util.IsDomainError(err) {
