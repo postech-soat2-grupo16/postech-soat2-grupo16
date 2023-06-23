@@ -207,7 +207,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusNoContent {
-			t.Fatalf("expected status no content; got %v", res.Status)
+			t.Fatalf("expected status no content; got %d", res.Status)
 		}
 	})
 }
