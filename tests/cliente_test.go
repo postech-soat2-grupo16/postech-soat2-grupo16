@@ -25,7 +25,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusOK {
-			t.Fatalf("expected status OK; got %v", res.Status)
+			t.Fatalf("expected status OK; got %d", res.StatusCode)
 		}
 
 		var response []domain.Cliente
@@ -79,7 +79,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusNotFound {
-			t.Fatalf("expected status not found; got %v", res.Status)
+			t.Fatalf("expected status not found; got %d", res.StatusCode)
 		}
 	})
 
@@ -108,7 +108,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusCreated {
-			t.Fatalf("expected status created; got %v", res.Status)
+			t.Fatalf("expected status created; got %d", res.StatusCode)
 		}
 
 		var response domain.Cliente
@@ -147,7 +147,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusOK {
-			t.Fatalf("expected status OK; got %v", res.Status)
+			t.Fatalf("expected status OK; got %d", res.StatusCode)
 		}
 
 		var response domain.Cliente
@@ -190,7 +190,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusNotFound {
-			t.Fatalf("expected status not found; got %v", res.Status)
+			t.Fatalf("expected status not found; got %d", res.StatusCode)
 		}
 	})
 
@@ -207,7 +207,7 @@ func TestGetClientes(t *testing.T) {
 		defer res.Body.Close()
 
 		if res.StatusCode != http.StatusNoContent {
-			t.Fatalf("expected status no content; got %d", res.Status)
+			t.Fatalf("expected status no content; got %d", res.StatusCode)
 		}
 	})
 }
