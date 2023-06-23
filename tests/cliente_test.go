@@ -39,7 +39,7 @@ func TestGetClientes(t *testing.T) {
 		}
 	})
 
-	t.Run("given_get_with_param_id_should_receive_a_clientes", func(t *testing.T) {
+	t.Run("given_get_with_param_id_should_receive_a_cliente", func(t *testing.T) {
 		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/clientes/1", baseURL), nil)
 		if err != nil {
 			t.Fatalf("could not create request: %v", err)
