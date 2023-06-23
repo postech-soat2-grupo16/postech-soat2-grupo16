@@ -157,7 +157,7 @@ func TestGetClientes(t *testing.T) {
 		}
 
 		if response == (domain.Cliente{}) {
-			t.Fatalf("expected a cliente; got 0")
+			t.Fatal("expected a cliente; got 0")
 		}
 
 		if response.CPF != updatedCliente.CPF && response.Email != updatedCliente.Email && response.Name != updatedCliente.Nome {
