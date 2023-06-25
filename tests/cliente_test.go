@@ -160,8 +160,16 @@ func TestGetClientes(t *testing.T) {
 			t.Fatal("expected a cliente; got 0")
 		}
 
-		if response.CPF != updatedCliente.CPF && response.Email != updatedCliente.Email && response.Name != updatedCliente.Nome {
-			t.Fatal("expected a cliente updated; got 0")
+		if response.CPF != updatedCliente.CPF {
+			t.Fatalf("expected a cliente CPF %s; got %s", updatedCliente.CPF, response.CPF)
+		}
+
+		if response.Email != updatedCliente.Email {
+			t.Fatalf("expected a cliente Email %s; got %s", updatedCliente.Email, response.Email)
+		}
+
+		if response.Name != updatedCliente.Nome {
+			t.Fatalf("expected a cliente Name %s; got %s", updatedCliente.Nome, response.Name)
 		}
 	})
 
