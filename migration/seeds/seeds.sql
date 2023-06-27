@@ -4,10 +4,7 @@ DELETE FROM pedido_items;
 DELETE FROM items;
 DELETE FROM pedidos;
 
--- RESTART AUTOINCREMENT SEQUENCES
-ALTER SEQUENCE clientes_id_seq RESTART WITH 1;
-ALTER SEQUENCE items_id_seq RESTART WITH 1;
-ALTER SEQUENCE pedidos_id_seq RESTART WITH 1;
+TRUNCATE clientes, pedidos, items, pedido_items RESTART IDENTITY;
 
 -- INSERT CLIENTES
 INSERT INTO clientes (email, cpf, name)
