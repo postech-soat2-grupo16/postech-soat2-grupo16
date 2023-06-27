@@ -40,13 +40,13 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 
 	// Injections
 	// Repositories
-	pedidoRepository := pedidorepo.NewPedidoRepository(orm)
-	clienteRepository := clienterepo.NewClienteRepository(orm)
-	itemRepository := itemrepo.NewItemRepository(orm)
+	pedidoRepository := pedidorepo.NewRepository(orm)
+	clienteRepository := clienterepo.NewRepository(orm)
+	itemRepository := itemrepo.NewRepository(orm)
 	// Use cases
-	itemUseCase := item.NewItemUseCase(itemRepository)
+	itemUseCase := item.NewUseCase(itemRepository)
 	pedidoUseCase := pedido.NewUseCase(pedidoRepository)
-	clienteUseCase := cliente.NewClienteUseCase(clienteRepository)
+	clienteUseCase := cliente.NewUseCase(clienteRepository)
 	// Handlers
 	_ = itemHandler.NewHandler(itemUseCase, r)
 	_ = pedidoHandler.NewHandler(pedidoUseCase, r)

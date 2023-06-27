@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver"
 	_ "github.com/joaocampari/postech-soat2-grupo16/docs"
@@ -24,5 +25,10 @@ func main() {
 	db := driver.SetupDB()
 	r := driver.SetupRouter(db)
 
-	log.Println(http.ListenAndServe(":8000", r))
+	server := &http.Server{
+		Addr:              ":8000",
+		ReadHeaderTimeout: 3 & time.Second,
+		Handler:           r,
+	}
+	log.Println(server.ListenAndServe())
 }

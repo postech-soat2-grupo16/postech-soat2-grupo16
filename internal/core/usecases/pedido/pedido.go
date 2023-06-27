@@ -31,7 +31,7 @@ func (p UseCase) Create(pedido domain.Pedido) (*domain.Pedido, error) {
 	return p.pedidoRepository.Save(pedido)
 }
 
-func (p UseCase) GetById(pedidoID uint32) (*domain.Pedido, error) {
+func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	pedido, err := p.pedidoRepository.GetByID(pedidoID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
