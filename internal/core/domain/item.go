@@ -3,6 +3,7 @@ package domain
 import (
 	"golang.org/x/exp/slices"
 	"gorm.io/gorm"
+	"strings"
 )
 
 const (
@@ -24,4 +25,22 @@ type Item struct {
 func (i *Item) IsCategoryValid() bool {
 	categories := []string{bebida, lanche, sobremesa, acompanhamento}
 	return slices.Contains(categories, i.Category)
+}
+
+func (i *Item) IsNameNull() bool {
+	return len(strings.TrimSpace(i.Name)) == 0
+}
+
+func (i *Item) IsPriceValid() bool {
+	return i.Price >= 0
+}
+
+func (i *Item) CopyItemWithNewValues(name, category, description string, price float32) Item {
+	return Item{
+		ID:          i.ID,
+		Name:        name,
+		Category:    category,
+		Description: description,
+		Price:       price,
+	}
 }

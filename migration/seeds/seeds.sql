@@ -12,10 +12,14 @@ VALUES ('cliente_teste_1@gmail.com', '12312312312', 'cliente teste 1'),
     ('cliente_teste_2@gmail.com', '22312312312', 'cliente teste 2');
 
 -- INSERT ITEMS
-INSERT INTO items ("name", category, description, price)
-VALUES ('Lanche', 'LANCHE', 'Lanche', 1),
-       ('Bebida', 'BEBIDA', 'Bebida', 1);
-
+INSERT INTO items (name, category, description, price, created_at, updated_at, deleted_at)
+VALUES ('Lanche', 'LANCHE', 'Lanche', 1, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('Bebida', 'BEBIDA', 'Bebida', 1, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('item_3', 'BEBIDA', 'update', 7.20, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('item_4', 'SOBREMESA', 'get', 10.30, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('item_5', 'ACOMPANHAMENTO', 'get', 30.20, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('item_6', 'ACOMPANHAMENTO', 'used for delete', 30.20, 'NOW'::timestamptz, 'NOW'::timestamptz, null),
+       ('item_7_deleted', 'ACOMPANHAMENTO', 'deleted', 28.74, 'NOW'::timestamptz, 'NOW'::timestamptz, 'NOW'::timestamptz);
 
 -- INSERT PEDIDOS
 INSERT INTO pedidos (status, notes, cliente_id)
