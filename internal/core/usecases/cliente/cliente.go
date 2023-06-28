@@ -19,9 +19,9 @@ func NewUseCase(clienteRepo ports.ClienteRepository) *UseCase {
 	}
 }
 
-func (p *UseCase) List(CPF *string) ([]domain.Cliente, error) {
-	if CPF != nil {
-		client := domain.Cliente{CPF: *CPF}
+func (p *UseCase) List(CPF string) ([]domain.Cliente, error) {
+	if CPF != "" {
+		client := domain.Cliente{CPF: CPF}
 		return p.clienteRepo.GetAll(client)
 	}
 	return p.clienteRepo.GetAll()

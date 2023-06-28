@@ -37,17 +37,11 @@ func NewHandler(useCase ports.ClienteUseCase, r *chi.Mux) *Handler {
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		CPF := r.URL.Query().Get("cpf")
-		var resp any
-		var err error
-		if CPF != "" {
-			resp, err = h.useCase.List(&CPF)
-		} else {
-			resp, err = h.useCase.List(nil)
-		}
+		clientes, err := h.useCase.List(CPF)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(resp)
+		json.NewEncoder(w).Encode(clientes)
 	}
 }
 
