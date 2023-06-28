@@ -3,8 +3,11 @@
 
 <p align="center">
  <a href="#sobre">Sobre</a> •
+ <a href="#domain-driven-development-event-storm">Sobre</a> •
  <a href="#como-executar">Como Executar</a> •
- <a href="#como-executar-testes">Como Executar Testes</a>
+ <a href="#como-executar-testes">Como Executar Testes</a> •
+ <a href="#como-visualizar-o-swagger">Como Visualizar o Swagger</a> •
+ <a href="#como-atualizar-o-swagger">Como Executar Testes</a>
 </p>
 
 ## Sobre
@@ -18,6 +21,14 @@ Equipe/Contribuidores:
 - Joao Vitor Campari Racchetti
 - Thiago Oliveira Camargo
 - Rodrigo Luiz Pedroza Bezerra
+
+### Domain Driven Development Event Storm
+
+Abaixo o diagrama gerado durante o Event Storm e Dicionário de Linguagem Ubíqua, realizados como parte da entrega do projeto:
+
+![ddd event storm](./docs/srcs/ddd.png)
+
+Também disponível [neste link](https://miro.com/app/board/uXjVMBVJX7I=/), com todas as etapas da dinâmica de grupo realizada, nesse caso, pode ser necessário solicitar permissão de acesso.
 
 ## Como Executar
 
@@ -37,3 +48,14 @@ Para executar os linters, é necessário ter instalada, localmente, a ferramenta
 
 Para executar, basta utilizar o comando `make lint`, que executará o comando com o parâmetro de autofix. Ou então o comando `make ci`, que executará os testes e o linter.
 
+## Como Visualizar o Swagger
+
+Este projeto conta com Swagger para especificação e documentação da API. Para visualizar, basta executar localmente o projeto, como indicado na seção [Como Executar](#como-executar). E então acessar o link abaixo:
+
+`http://localhost:8000/swagger/index.html`
+
+## Como Atualizar o Swagger
+
+Para atualizar o Swagger após a criação de um novo endpoint ou alteração de um endpoint existente, basta executar as anotações conforma a [documentação](https://github.com/swaggo/http-swagger#a-practical-example) do `swag`. E em seguida, executar a receita do makefile conforme o exemplo abaixo:
+
+`make update-docs` 
