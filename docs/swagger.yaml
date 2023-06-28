@@ -56,6 +56,11 @@ paths:
   /clientes:
     get:
       operationId: get-all-clients
+      parameters:
+      - description: Optional Filter by CPF
+        in: query
+        name: cpf
+        type: string
       produces:
       - application/json
       responses:
@@ -267,6 +272,11 @@ paths:
   /pedidos:
     get:
       operationId: get-all-orders
+      parameters:
+      - description: Optional Filter by Status
+        in: query
+        name: status
+        type: string
       produces:
       - application/json
       responses:
@@ -353,10 +363,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/pedido.Pedido'
-      - description: Optional Filter by Status
-        in: query
-        name: status
-        type: string
       produces:
       - application/json
       responses:

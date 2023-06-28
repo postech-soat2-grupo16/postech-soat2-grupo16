@@ -19,14 +19,12 @@ func NewUseCase(clienteRepo ports.ClienteRepository) *UseCase {
 	}
 }
 
-func (p *UseCase) List() ([]domain.Cliente, error) {
-	result, err := p.clienteRepo.GetAll()
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
+func (p *UseCase) List(CPF *string) ([]domain.Cliente, error) {
+	if CPF != nil {
+		client := domain.Cliente{CPF: *CPF}
+		return p.clienteRepo.GetAll(client)
 	}
-
-	return result, err
+	return p.clienteRepo.GetAll()
 }
 
 func (p *UseCase) GetByID(clienteID uint32) (*domain.Cliente, error) {

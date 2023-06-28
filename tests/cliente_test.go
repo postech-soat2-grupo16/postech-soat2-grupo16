@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/cliente"
 	"net/http"
 	"testing"
+
+	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/cliente"
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 )
@@ -36,6 +37,37 @@ func TestGetClientes(t *testing.T) {
 
 		if len(response) == 0 {
 			t.Fatal("expected a list of clientes; got 0")
+		}
+	})
+
+	t.Run("given_get_with_param_cpf_should_receive_a_cliente", func(t *testing.T) {
+		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/clientes?cpf=12312312312", baseURL), nil)
+		if err != nil {
+			t.Fatalf("could not create request: %v", err)
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatalf("could not send request: %v", err)
+		}
+		defer res.Body.Close()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("expected status OK; got %d", res.StatusCode)
+		}
+
+		var response []domain.Cliente
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			t.Fatalf("could not parse response: %v", err)
+		}
+
+		if len(response) > 1 {
+			t.Fatal("expected a list of clientes; got 0")
+		}
+		expectedName := "cliente teste 1"
+		if response[0].Name != expectedName {
+			t.Fatalf("expected name %s; got %s", expectedName, response[0].Name)
 		}
 	})
 
