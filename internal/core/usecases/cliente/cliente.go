@@ -9,17 +9,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type ClienteUseCase struct {
+type UseCase struct {
 	clienteRepo ports.ClienteRepository
 }
 
-func NewClienteUseCase(clienteRepo ports.ClienteRepository) *ClienteUseCase {
-	return &ClienteUseCase{
+func NewUseCase(clienteRepo ports.ClienteRepository) *UseCase {
+	return &UseCase{
 		clienteRepo: clienteRepo,
 	}
 }
 
-func (p *ClienteUseCase) List() ([]domain.Cliente, error) {
+func (p *UseCase) List() ([]domain.Cliente, error) {
 	result, err := p.clienteRepo.GetAll()
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +29,7 @@ func (p *ClienteUseCase) List() ([]domain.Cliente, error) {
 	return result, err
 }
 
-func (p *ClienteUseCase) GetByID(clienteID uint32) (*domain.Cliente, error) {
+func (p *UseCase) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	result, err := p.clienteRepo.GetByID(clienteID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
@@ -37,7 +37,7 @@ func (p *ClienteUseCase) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	return result, nil
 }
 
-func (p *ClienteUseCase) Create(email, cpf, nome string) (*domain.Cliente, error) {
+func (p *UseCase) Create(email, cpf, nome string) (*domain.Cliente, error) {
 	cliente := domain.Cliente{
 		Email: email,
 		CPF:   cpf,
@@ -52,7 +52,7 @@ func (p *ClienteUseCase) Create(email, cpf, nome string) (*domain.Cliente, error
 	return result, nil
 }
 
-func (p *ClienteUseCase) Update(clienteID uint32, email, cpf, nome string) (*domain.Cliente, error) {
+func (p *UseCase) Update(clienteID uint32, email, cpf, nome string) (*domain.Cliente, error) {
 	cliente := domain.Cliente{
 		ID:    clienteID,
 		Email: email,
@@ -68,7 +68,7 @@ func (p *ClienteUseCase) Update(clienteID uint32, email, cpf, nome string) (*dom
 	return result, nil
 }
 
-func (p *ClienteUseCase) Delete(clienteID uint32) error {
+func (p *UseCase) Delete(clienteID uint32) error {
 	err := p.clienteRepo.Delete(clienteID)
 	if err != nil {
 		log.Fatal(err)

@@ -12,17 +12,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewItemUseCase(itemRepo ports.ItemRepository) ItemUseCase {
-	return ItemUseCase{
+func NewUseCase(itemRepo ports.ItemRepository) UseCase {
+	return UseCase{
 		itemRepo: itemRepo,
 	}
 }
 
-type ItemUseCase struct {
+type UseCase struct {
 	itemRepo ports.ItemRepository
 }
 
-func (p ItemUseCase) List() ([]domain.Item, error) {
+func (p UseCase) List() ([]domain.Item, error) {
 	items, err := p.itemRepo.GetAll()
 	if err != nil {
 		log.Println(err)
@@ -32,7 +32,7 @@ func (p ItemUseCase) List() ([]domain.Item, error) {
 	return items, err
 }
 
-func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
+func (p UseCase) GetByID(itemID uint32) (*domain.Item, error) {
 	result, err := p.itemRepo.GetByID(itemID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -45,7 +45,7 @@ func (p ItemUseCase) GetByID(itemID uint32) (*domain.Item, error) {
 	return result, nil
 }
 
-func (p ItemUseCase) GetByCategory(category string) ([]domain.Item, error) {
+func (p UseCase) GetByCategory(category string) ([]domain.Item, error) {
 	item := domain.Item{
 		Category: category,
 	}
@@ -66,7 +66,7 @@ func (p ItemUseCase) GetByCategory(category string) ([]domain.Item, error) {
 	return result, nil
 }
 
-func (p ItemUseCase) Create(name, category, description string, price float32) (*domain.Item, error) {
+func (p UseCase) Create(name, category, description string, price float32) (*domain.Item, error) {
 	item := domain.Item{
 		Name:        name,
 		Category:    strings.ToUpper(category),
@@ -86,7 +86,7 @@ func (p ItemUseCase) Create(name, category, description string, price float32) (
 	return result, nil
 }
 
-func (p ItemUseCase) Update(itemID uint32, name, category, description string, price float32) (*domain.Item, error) {
+func (p UseCase) Update(itemID uint32, name, category, description string, price float32) (*domain.Item, error) {
 	item := domain.Item{
 		ID:          itemID,
 		Name:        name,
@@ -107,7 +107,7 @@ func (p ItemUseCase) Update(itemID uint32, name, category, description string, p
 	return result, nil
 }
 
-func (p ItemUseCase) Delete(itemID uint32) error {
+func (p UseCase) Delete(itemID uint32) error {
 	err := p.itemRepo.Delete(itemID)
 	if err != nil {
 		log.Println(err)

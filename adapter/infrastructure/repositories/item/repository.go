@@ -7,15 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type ItemRepository struct {
+type Repository struct {
 	orm *gorm.DB
 }
 
-func NewItemRepository(orm *gorm.DB) *ItemRepository {
-	return &ItemRepository{orm: orm}
+func NewRepository(orm *gorm.DB) *Repository {
+	return &Repository{orm: orm}
 }
 
-func (c *ItemRepository) Save(item domain.Item) (*domain.Item, error) {
+func (c *Repository) Save(item domain.Item) (*domain.Item, error) {
 	result := c.orm.Create(&item)
 	if result.Error != nil {
 		log.Println(result.Error)
@@ -25,7 +25,7 @@ func (c *ItemRepository) Save(item domain.Item) (*domain.Item, error) {
 	return &item, nil
 }
 
-func (c *ItemRepository) Update(item domain.Item) (*domain.Item, error) {
+func (c *Repository) Update(item domain.Item) (*domain.Item, error) {
 	result := c.orm.Updates(&item)
 	if result.Error != nil {
 		log.Println(result.Error)
@@ -34,7 +34,7 @@ func (c *ItemRepository) Update(item domain.Item) (*domain.Item, error) {
 	return &item, nil
 }
 
-func (c *ItemRepository) Delete(itemID uint32) error {
+func (c *Repository) Delete(itemID uint32) error {
 	item := domain.Item{
 		ID: itemID,
 	}
@@ -47,7 +47,7 @@ func (c *ItemRepository) Delete(itemID uint32) error {
 	return nil
 }
 
-func (c *ItemRepository) GetByID(itemID uint32) (*domain.Item, error) {
+func (c *Repository) GetByID(itemID uint32) (*domain.Item, error) {
 	item := domain.Item{
 		ID: itemID,
 	}
@@ -59,7 +59,7 @@ func (c *ItemRepository) GetByID(itemID uint32) (*domain.Item, error) {
 	return &item, nil
 }
 
-func (c *ItemRepository) GetByCategory(category string) ([]domain.Item, error) {
+func (c *Repository) GetByCategory(category string) ([]domain.Item, error) {
 	item := domain.Item{
 		Category: category,
 	}
@@ -72,7 +72,7 @@ func (c *ItemRepository) GetByCategory(category string) ([]domain.Item, error) {
 	return items, nil
 }
 
-func (c *ItemRepository) GetAll() (items []domain.Item, err error) {
+func (c *Repository) GetAll() (items []domain.Item, err error) {
 	result := c.orm.Find(&items)
 	if result.Error != nil {
 		log.Println(result.Error)

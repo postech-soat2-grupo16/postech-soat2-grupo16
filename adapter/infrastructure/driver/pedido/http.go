@@ -20,7 +20,7 @@ func NewHandler(useCase ports.PedidoUseCase, r *chi.Mux) *Handler {
 	r.Route("/pedidos", func(r chi.Router) {
 		r.Get("/", handler.GetAll())
 		r.Post("/", handler.Create())
-		r.Get("/{id}", handler.GetById())
+		r.Get("/{id}", handler.GetByID())
 		r.Put("/{id}", handler.Update())
 		r.Delete("/{id}", handler.Delete())
 	})
@@ -58,7 +58,7 @@ func (h *Handler) GetAll() http.HandlerFunc {
 // @Success	200	{object}	Pedido
 // @Failure	404
 // @Router		/pedidos/{id} [get]
-func (h *Handler) GetById() http.HandlerFunc {
+func (h *Handler) GetByID() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 32)
@@ -66,7 +66,7 @@ func (h *Handler) GetById() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		pedido, err := h.useCase.GetById(uint32(id))
+		pedido, err := h.useCase.GetByID(uint32(id))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
