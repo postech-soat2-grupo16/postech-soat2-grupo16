@@ -190,6 +190,9 @@ func TestSavePedidos(t *testing.T) {
 		var response domain.Pedido
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			t.Fatalf("could not parse response: %v", err)
+		}
 
 		if response.Notes != newNote {
 			t.Fatalf("expected notes to be %v, got %v", newNote, response.Notes)
@@ -258,6 +261,5 @@ func TestSavePedidos(t *testing.T) {
 		if res.StatusCode != http.StatusNotFound {
 			t.Fatalf("expected status NOT FOUND; got %s", res.Status)
 		}
-
 	})
 }
