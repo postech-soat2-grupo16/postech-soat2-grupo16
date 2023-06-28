@@ -31,11 +31,13 @@ func NewHandler(useCase ports.ClienteUseCase, r *chi.Mux) *Handler {
 // @ID			get-all-clients
 // @Produce	json
 // @Success	200	{object}	Cliente
+// @Param       cpf  query       string  false   "Optional Filter by CPF"
 // @Failure	500
 // @Router		/clientes [get]
 func (h *Handler) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		clientes, err := h.useCase.List()
+		CPF := r.URL.Query().Get("cpf")
+		clientes, err := h.useCase.List(CPF)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

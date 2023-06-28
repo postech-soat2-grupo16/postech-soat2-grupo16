@@ -35,6 +35,14 @@ const docTemplate = `{
                 ],
                 "summary": "Get all clients",
                 "operationId": "get-all-clients",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Optional Filter by CPF",
+                        "name": "cpf",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -355,6 +363,14 @@ const docTemplate = `{
                 ],
                 "summary": "Get all orders",
                 "operationId": "get-all-orders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Optional Filter by Status",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -456,12 +472,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/pedido.Pedido"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Optional Filter by Status",
-                        "name": "status",
-                        "in": "query"
                     }
                 ],
                 "responses": {

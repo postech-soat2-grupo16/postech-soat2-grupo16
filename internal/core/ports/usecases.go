@@ -20,7 +20,7 @@ type PedidoUseCase interface {
 }
 
 type ClienteUseCase interface {
-	List() ([]domain.Cliente, error)
+	List(cpf string) ([]domain.Cliente, error)
 	Create(email, cpf, nome string) (*domain.Cliente, error)
 	GetByID(clienteID uint32) (*domain.Cliente, error)
 	Update(clienteID uint32, email, cpf, nome string) (*domain.Cliente, error)

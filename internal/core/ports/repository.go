@@ -17,7 +17,7 @@ type ClienteRepository interface {
 	Update(cliente domain.Cliente) (*domain.Cliente, error)
 	Delete(clienteID uint32) error
 	GetByID(clienteID uint32) (*domain.Cliente, error)
-	GetAll() ([]domain.Cliente, error)
+	GetAll(conds ...interface{}) ([]domain.Cliente, error)
 }
 
 type ItemRepository interface {

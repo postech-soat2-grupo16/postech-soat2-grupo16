@@ -59,8 +59,8 @@ func (c *Repository) GetByID(clienteID uint32) (*domain.Cliente, error) {
 	return &cliente, nil
 }
 
-func (c *Repository) GetAll() (clientes []domain.Cliente, err error) {
-	result := c.orm.Find(&clientes)
+func (c *Repository) GetAll(conds ...interface{}) (clientes []domain.Cliente, err error) {
+	result := c.orm.Find(&clientes, conds...)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return clientes, result.Error
