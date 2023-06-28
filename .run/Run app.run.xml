@@ -3,7 +3,7 @@
     <module name="postech-soat2-grupo16" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
-      <env name="DATABASE_URL" value="host=localhost user=postgres password=postgres dbname=postgres sslmode=disable" />
+      <env name="DATABASE_URL" value="host=localhost user=postgres password=postgres dbname=fastfood_db sslmode=disable" />
     </envs>
     <kind value="PACKAGE" />
     <package value="github.com/joaocampari/postech-soat2-grupo16" />

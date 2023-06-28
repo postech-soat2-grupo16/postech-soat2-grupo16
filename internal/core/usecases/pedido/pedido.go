@@ -41,6 +41,9 @@ func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 }
 
 func (p UseCase) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
+	if _, err := p.pedidoRepository.GetByID(pedidoID); errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return p.pedidoRepository.Update(pedidoID, pedido)
 }
 

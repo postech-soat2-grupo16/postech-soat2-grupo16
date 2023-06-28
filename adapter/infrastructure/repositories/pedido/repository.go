@@ -43,7 +43,7 @@ func (p *Repository) Delete(pedidoID uint32) error {
 	pedido := domain.Pedido{
 		ID: pedidoID,
 	}
-	result := p.orm.Delete(&pedido)
+	result := p.orm.Preload("Items.Item").Delete(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return result.Error
