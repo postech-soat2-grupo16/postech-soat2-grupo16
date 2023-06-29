@@ -3,11 +3,13 @@
 
 <p align="center">
  <a href="#sobre">Sobre</a> •
+ <a href="#entregas-fase-1">Entregas Fase 1</a> •
  <a href="#domain-driven-development-event-storm">Sobre</a> •
+ <a href="#interpretação-apis">Interpretação APIs</a> •
  <a href="#como-executar">Como Executar</a> •
  <a href="#como-executar-testes">Como Executar Testes</a> •
  <a href="#como-visualizar-o-swagger">Como Visualizar o Swagger</a> •
- <a href="#como-atualizar-o-swagger">Como Executar Testes</a>
+ <a href="#como-atualizar-o-swagger">Como Executar Testes</a> •
 </p>
 
 ## Sobre
@@ -22,13 +24,59 @@ Equipe/Contribuidores:
 - Thiago Oliveira Camargo
 - Rodrigo Luiz Pedroza Bezerra
 
-### Domain Driven Development Event Storm
+### Entregas Fase 1
+
+1. Documentação do sistema (DDD) utilizando a linguagem ubíqua, dos seguintes fluxos:
+a. Realização do pedido e pagamento
+b. Preparação e entrega do pedido
+
+2. Uma aplicação para todo sistema de backend (monolito) que deverá ser desenvolvido seguindo os padrões apresentados nas aulas:
+a. Utilizando arquitetura hexagonal
+b. APIs:
+    - Cadastro do Cliente
+    - Identificação do Cliente via CPF
+    - Criar, editar e remover de produto
+    - Buscar produtos por categoria
+    - Fake checkout, apenas enviar os produtos escolhidos para a fila
+    - Listar os pedidos
+c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
+d. Banco de dados a sua escolha
+    - Inicialmente deveremos trabalhar e organizar a fila dos pedidos apenas em banco de dados
+
+3. A aplicação deve ser entregue com um Dockerfile configurado para executá-la corretamente.
+Para validação da POC, temos a seguinte limitação de infraestrutura:
+a. 1 instância para banco de dados
+b. 1 instâncias para executar aplicação
+
+Não será necessário o desenvolvimento de interfaces para o frontend, o foco deve ser total no backend.
+
+#### Domain Driven Development Event Storm
 
 Abaixo o diagrama gerado durante o Event Storm e Dicionário de Linguagem Ubíqua, realizados como parte da entrega do projeto:
 
 ![ddd event storm](./docs/srcs/ddd.png)
 
 Também disponível [neste link](https://miro.com/app/board/uXjVMBVJX7I=/), com todas as etapas da dinâmica de grupo realizada, nesse caso, pode ser necessário solicitar permissão de acesso.
+
+#### Interpretação APIs 
+
+Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entrega dos requisitos (APIs) solicitados nesta fase:
+
+- Cadastro do Cliente
+    - É possível realizar o cadastro do cliente através do método `POST /clientes`, sendo que este pode ser realizado utilizando NOME (obrigatório) EMAIL (opcional) CPF (opcional);
+- Identificação do Cliente via CPF
+    - Caso o cliente opte por se identificar por CPF, é possível recupera-lo a partir desse dado `GET /clientes` utilizando o parâmetro opcional via `query`: "CPF"
+- Criar, editar e remover de produto
+    - CRUD de produtos disponível a partir dos métodos `GET`, `POST`, `PUT`e `DELETE`
+- Buscar produtos por categoria
+    - A busca de produtos possui o parâmetro opcional "category", trazendo todos os produtos com aquela categoria
+- Fake checkout, apenas enviar os produtos escolhidos para a fila
+    - O checkout (fake checkout no momento) realizamos através da atualização do status do pedido, que ao passar para o status `RECEBIDO`, pode ser recuperado na listagem a partir desse filtro opcional "status" no endpoint e possivelmente ser exibido em uma interface de cozinha para lista de preparação
+- Listar os pedidos
+    - A listagem de pedidos está disponível com filtro opcional de "status", conforme mencionado acima
+
+Para mais informações sobre contratos/API, é possível acessar através do swagger, como mencionado na seção [como visualizar o swagger](#como-visualizar-o-swagger).
+
 
 ## Como Executar
 
