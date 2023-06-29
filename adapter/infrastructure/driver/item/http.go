@@ -2,10 +2,9 @@ package item
 
 import (
 	"encoding/json"
+	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 	"net/http"
 	"strconv"
-
-	"github.com/joaocampari/postech-soat2-grupo16/internal/util"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/ports"
@@ -160,6 +159,12 @@ func (h *Handler) Update() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		if item == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(item)
 	}
@@ -183,11 +188,17 @@ func (h *Handler) Delete() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		err = h.useCase.Delete(uint32(id))
+		item, err := h.useCase.Delete(uint32(id))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		if item == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
