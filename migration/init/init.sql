@@ -49,3 +49,16 @@ CREATE TABLE IF NOT EXISTS pedido_items (
 	CONSTRAINT fk_pedidos_items FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
 );
 CREATE INDEX idx_pedidos_items_deleted_at ON pedido_items USING btree (deleted_at);
+
+-- Criação da tabela 'pagamentos'
+CREATE TABLE IF NOT EXISTS pagamentos (
+    id SERIAL PRIMARY KEY,
+    pedido_id INT NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    status TEXT NOT NULL,
+    created_at timestamptz NULL,
+    updated_at timestamptz NULL,
+    deleted_at timestamptz NULL,
+    CONSTRAINT fk_pagamentos_pedidos FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+    );
+CREATE INDEX idx_pagamentos_deleted_at ON pagamentos USING btree (deleted_at);

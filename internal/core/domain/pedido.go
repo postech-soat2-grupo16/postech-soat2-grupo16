@@ -1,24 +1,58 @@
 package domain
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"golang.org/x/exp/slices"
+	"gorm.io/gorm"
+)
 
 const (
 	// Status of pedidos
-	StatusPedidoCriado              = "CRIADO"
-	StatusPedidoAguardandoPagamento = "AGUARDANDO_PAGAMENTO"
-	StatusPedidoRecebido            = "RECEBIDO"
-	StatusPedidoEmPreparacao        = "EM_PREPARACAO"
-	StatusPedidoPronto              = "PRONTO"
-	StatusPedidoEntregue            = "ENTREGUE"
+	StatusPedidoCriado       = "CRIADO"
+	StatusPedidoRecebido     = "RECEBIDO"
+	StatusPedidoEmPreparacao = "EM_PREPARACAO"
+	StatusPedidoPronto       = "PRONTO"
+	StatusPedidoEntregue     = "ENTREGUE"
+
+	StatusPagamentoAprovado = "APROVADO"
+	StatusPagamentoNegado   = "NEGADO"
 )
 
 type Pedido struct {
-	ID        uint32       `gorm:"primary_key;auto_increment" json:"id"`
-	Items     []PedidoItem `json:"items"`
-	Status    string       `gorm:"not null" json:"status"`
-	Notes     string       `gorm:"null" json:"notes"`
-	ClienteID uint32       `json:"-" json:"cliente_id"`
-	Cliente   Cliente      `gorm:"references:ID" json:"cliente"`
-	// TODO: include gorm created_at and updated_at fields in the json with underscore.
+	ID         uint32       `gorm:"primary_key;auto_increment" json:"id"`
+	Items      []PedidoItem `json:"items"`
+	Status     string       `gorm:"not null" json:"status"`
+	Notes      string       `gorm:"null" json:"notes"`
+	ClienteID  uint32       `json:"-" json:"cliente_id"`
+	Cliente    Cliente      `gorm:"references:ID" json:"cliente"`
+	Pagamentos []Pagamento  `gorm:"constraint:OnDelete:CASCADE" json:"pagamentos"`
 	gorm.Model
+}
+
+func (p *Pedido) IsStatusValid() bool {
+	status := []string{StatusPedidoCriado, StatusPedidoRecebido, StatusPedidoEmPreparacao, StatusPedidoPronto, StatusPedidoEntregue}
+	return slices.Contains(status, p.Status)
+}
+
+func (p *Pedido) GetAmount() float64 {
+	var amount float64
+	for _, item := range p.Items {
+		amount += float64(item.Item.Price) * float64(item.Quantity)
+	}
+	return amount
+}
+
+type Pagamento struct {
+	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
+	PedidoID  uint32    `gorm:"not null" json:"-"`
+	Amount    float64   `gorm:"not null" json:"amount"`
+	Status    string    `gorm:"not null" json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (p *Pagamento) IsStatusValid() bool {
+	status := []string{StatusPagamentoAprovado, StatusPagamentoNegado}
+	return slices.Contains(status, p.Status)
 }

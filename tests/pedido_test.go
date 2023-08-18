@@ -108,6 +108,35 @@ func TestGetPedidos(t *testing.T) {
 		}
 	})
 
+	t.Run("given_existing_pedido_id_should_return_pagamento_details", func(t *testing.T) {
+		orderID := 3
+
+		req, err := http.NewRequest("GET", fmt.Sprintf("%s/pedidos/%d/pagamentos/status", baseURL, orderID), nil)
+		if err != nil {
+			t.Fatalf("could not create request: %v", err)
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatalf("could not send request: %v", err)
+		}
+		defer res.Body.Close()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("expected status OK; got %s", res.Status)
+		}
+
+		var response domain.Pagamento
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			t.Fatalf("could not parse response: %v", err)
+		}
+
+		if response.Status != "APROVADO" {
+			t.Fatalf("expected status APROVADO; got %s", response.Status)
+		}
+	})
+
 	t.Run("given_nonexistent_pedido_id_should_return_404", func(t *testing.T) {
 		orderID := 999
 

@@ -40,6 +40,15 @@ func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	return pedido, nil
 }
 
+func (p UseCase) GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error) {
+	lastPayment, err := p.pedidoRepository.GetLastPaymentStatus(pedidoID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
+	return lastPayment, nil
+}
+
 func (p UseCase) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {
 	if _, err := p.pedidoRepository.GetByID(pedidoID); errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil

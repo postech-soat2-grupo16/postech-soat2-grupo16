@@ -15,6 +15,7 @@ type PedidoUseCase interface {
 	List(status string) ([]domain.Pedido, error)
 	Create(pedido domain.Pedido) (*domain.Pedido, error)
 	GetByID(pedidoID uint32) (*domain.Pedido, error)
+	GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error)
 	Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error)
 	Delete(pedidoID uint32) error
 }

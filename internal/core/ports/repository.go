@@ -9,6 +9,7 @@ type PedidoRepository interface {
 	Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error)
 	Delete(pedidoID uint32) error
 	GetByID(pedidoID uint32) (*domain.Pedido, error)
+	GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error)
 	GetAll(conds ...interface{}) ([]domain.Pedido, error)
 }
 

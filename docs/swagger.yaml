@@ -346,7 +346,7 @@ paths:
             $ref: '#/definitions/pedido.Pedido'
         "404":
           description: Not Found
-      summary: Get a order by ID
+      summary: Get payment status by order ID
       tags:
       - Orders
     put:

@@ -424,7 +424,7 @@ const docTemplate = `{
                 "tags": [
                     "Orders"
                 ],
-                "summary": "Get a order by ID",
+                "summary": "Get payment status by order ID",
                 "operationId": "get-order-by-id",
                 "parameters": [
                     {
