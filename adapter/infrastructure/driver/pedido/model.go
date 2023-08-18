@@ -1,6 +1,8 @@
 package pedido
 
 import (
+	"time"
+
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 )
 
@@ -14,6 +16,14 @@ type Pedido struct {
 type Item struct {
 	ItemID   uint32 `json:"itemId"`
 	Quantity int    `json:"quantity"`
+}
+
+type Pagamento struct {
+	ID        uint32    `json:"id"`
+	Amount    float64   `json:"amount"`
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (p *Pedido) PedidoItemToDomain() (list []domain.PedidoItem) {

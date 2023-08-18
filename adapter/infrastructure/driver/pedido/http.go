@@ -82,7 +82,7 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 // @ID			get-payment-by-order-id
 // @Produce	json
 // @Param		id	path		string	true	"Order ID"
-// @Success	200	{object}	Pedido
+// @Success	200	{object}	Pagamento
 // @Failure	404
 // @Router		/pedidos/{id}/pagamentos/status [get]
 func (h *Handler) GetPaymentStatusByOrderID(w http.ResponseWriter, r *http.Request) {

@@ -26,6 +26,19 @@ definitions:
       quantity:
         type: integer
     type: object
+  pedido.Pagamento:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
   pedido.Pedido:
     properties:
       clienteId:
@@ -392,7 +405,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/pedido.Pedido'
+            $ref: '#/definitions/pedido.Pagamento'
         "404":
           description: Not Found
       summary: Get payment status by order ID
