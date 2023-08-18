@@ -79,12 +79,12 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 //
 // @Tags		Orders
 //
-// @ID			get-order-by-id
+// @ID			get-payment-by-order-id
 // @Produce	json
 // @Param		id	path		string	true	"Order ID"
 // @Success	200	{object}	Pedido
 // @Failure	404
-// @Router		/pedidos/{id} [get]
+// @Router		/pedidos/{id}/pagamentos/status [get]
 func (h *Handler) GetPaymentStatusByOrderID(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 32)

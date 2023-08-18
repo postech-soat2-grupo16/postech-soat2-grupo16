@@ -346,7 +346,7 @@ paths:
             $ref: '#/definitions/pedido.Pedido'
         "404":
           description: Not Found
-      summary: Get payment status by order ID
+      summary: Get a order by ID
       tags:
       - Orders
     put:
@@ -375,6 +375,27 @@ paths:
         "404":
           description: Not Found
       summary: Update a order
+      tags:
+      - Orders
+  /pedidos/{id}/pagamentos/status:
+    get:
+      operationId: get-payment-by-order-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "404":
+          description: Not Found
+      summary: Get payment status by order ID
       tags:
       - Orders
 swagger: "2.0"

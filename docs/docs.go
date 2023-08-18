@@ -424,7 +424,7 @@ const docTemplate = `{
                 "tags": [
                     "Orders"
                 ],
-                "summary": "Get payment status by order ID",
+                "summary": "Get a order by ID",
                 "operationId": "get-order-by-id",
                 "parameters": [
                     {
@@ -513,6 +513,38 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/pedidos/{id}/pagamentos/status": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get payment status by order ID",
+                "operationId": "get-payment-by-order-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
