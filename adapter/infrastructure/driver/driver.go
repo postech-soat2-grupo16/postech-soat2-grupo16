@@ -19,6 +19,11 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	// This is only a test token, not a real one and will be remove in the future replacing by a secret service.
+	authToken = "TEST-8788837371574102-082018-c29a1c5da797dbf70a8c99b842da2850-144255706"
+)
+
 func SetupDB() *gorm.DB {
 	dialector := database.GetPostgresDialector()
 	db := database.NewORM(dialector)
@@ -44,7 +49,7 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	pedidoRepository := pedidorepo.NewRepository(orm)
 	clienteRepository := clienterepo.NewRepository(orm)
 	itemRepository := itemrepo.NewRepository(orm)
-	mercadoPagoRepository := api.NewMercadoPagoAPIRepository()
+	mercadoPagoRepository := api.NewMercadoPagoAPIRepository(authToken)
 	// Use cases
 	itemUseCase := item.NewUseCase(itemRepository)
 	pedidoUseCase := pedido.NewUseCase(pedidoRepository, mercadoPagoRepository)

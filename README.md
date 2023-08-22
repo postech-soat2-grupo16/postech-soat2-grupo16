@@ -82,6 +82,9 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
     - A atualização do status do pedido é realizada através do método `PUT /pedidos/{id}`, onde o status pode ser atualizado.
 - Webhook para notificação de pagamento do pedido
     - O webhook para notificação de pagamento do pedido é realizado através do método `POST /pedidos/mp-webhook`, onde é possível receber o retorno do pagamento e atualizar o status do pedido para `PAGO`
+- Criação de QR code para pedido
+  - A criação do QR code para pedido é realizada através do método `GET /pedidos/{id}/qr-code`, onde é possível receber o retorno do QR code para pagamento do pedido.
+  - No retorno voltara um código que poderá renderizar uma imagem a partir dele em qualquer site como: https://www.qr-code-generator.com/
 #### JSON de exemplo:
 ````
   {

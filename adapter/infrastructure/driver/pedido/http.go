@@ -22,6 +22,7 @@ func NewHandler(useCase ports.PedidoUseCase, r *chi.Mux) *Handler {
 		r.Get("/{id}/pagamentos/status", handler.GetPaymentStatusByOrderID)
 		r.Post("/", handler.Create)
 		r.Get("/{id}", handler.GetByID)
+		r.Get("/{id}/qr-code", handler.GetQRCodeByPedidoID)
 		r.Put("/{id}", handler.Update)
 		r.Delete("/{id}", handler.Delete)
 		r.Post("/mp-webhook", handler.PaymentWebhookCreate)
@@ -74,6 +75,37 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(pedido)
+}
+
+// @Summary	Get QR Code pedido
+//
+// @Tags		Orders
+//
+// @ID			get-qr-code-by-id
+// @Produce	json
+// @Param		id	path		string	true	"Order ID"
+// @Success	200	{object}	Pedido
+// @Failure	404
+// @Router		/pedidos/{id}/qr-code [get]
+func (h *Handler) GetQRCodeByPedidoID(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idStr, 10, 32)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	qrCodeStr, err := h.useCase.CreateQRCode(uint32(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	if qrCodeStr == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	qrCode := QRCode{
+		QRCode: *qrCodeStr,
+	}
+	json.NewEncoder(w).Encode(qrCode)
 }
 
 // @Summary	Get payment status by order ID

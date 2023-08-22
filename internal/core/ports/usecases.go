@@ -19,6 +19,7 @@ type PedidoUseCase interface {
 	Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error)
 	UpdatePaymentStatusByPaymentID(pagamentoID string) (*domain.Pedido, error)
 	Delete(pedidoID uint32) error
+	CreateQRCode(pedidoID uint32) (*string, error)
 }
 
 type ClienteUseCase interface {

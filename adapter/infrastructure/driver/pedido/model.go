@@ -18,6 +18,10 @@ type Item struct {
 	Quantity int    `json:"quantity"`
 }
 
+type QRCode struct {
+	QRCode string `json:"qr_code"`
+}
+
 type Pagamento struct {
 	ID        uint32    `json:"id"`
 	Amount    float64   `json:"amount"`

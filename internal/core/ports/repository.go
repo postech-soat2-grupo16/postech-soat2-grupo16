@@ -32,4 +32,5 @@ type ItemRepository interface {
 
 type MercadoPagoRepository interface {
 	GetPedidoIDByPaymentID(paymentID string) (uint32, error)
+	CreateQRCodeForPedido(pedido domain.Pedido) (string, error)
 }

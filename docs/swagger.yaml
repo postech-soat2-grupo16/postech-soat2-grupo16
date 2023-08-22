@@ -455,4 +455,25 @@ paths:
       summary: Get payment status by order ID
       tags:
       - Orders
+  /pedidos/{id}/qr-code:
+    get:
+      operationId: get-qr-code-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "404":
+          description: Not Found
+      summary: Get QR Code pedido
+      tags:
+      - Orders
 swagger: "2.0"

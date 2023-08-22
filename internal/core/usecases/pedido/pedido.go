@@ -32,6 +32,23 @@ func (p UseCase) Create(pedido domain.Pedido) (*domain.Pedido, error) {
 	return p.pedidoRepository.Save(pedido)
 }
 
+func (p UseCase) CreateQRCode(pedidoID uint32) (*string, error) {
+	pedido, err := p.pedidoRepository.GetByID(pedidoID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	qrCode, err := p.mercadoPagoRepository.CreateQRCodeForPedido(*pedido)
+	if err != nil {
+		return nil, err
+	}
+
+	return &qrCode, nil
+}
+
 func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	pedido, err := p.pedidoRepository.GetByID(pedidoID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
