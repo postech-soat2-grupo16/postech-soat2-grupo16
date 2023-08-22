@@ -60,6 +60,7 @@ Também disponível [neste link](https://miro.com/app/board/uXjVMBVJX7I=/), com 
 
 #### Interpretação APIs 
 
+### Fase 1
 Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entrega dos requisitos (APIs) solicitados nesta fase:
 
 - Cadastro do Cliente
@@ -75,6 +76,28 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
 - Listar os pedidos
     - A listagem de pedidos está disponível com filtro opcional de "status", conforme mencionado acima
 
+### Fase 2
+Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entrega dos requisitos (APIs) solicitados nesta fase:
+- Atualização do status do pedido
+    - A atualização do status do pedido é realizada através do método `PUT /pedidos/{id}`, onde o status pode ser atualizado.
+- Webhook para notificação de pagamento do pedido
+    - O webhook para notificação de pagamento do pedido é realizado através do método `POST /pedidos/mp-webhook`, onde é possível receber o retorno do pagamento e atualizar o status do pedido para `PAGO`
+#### JSON de exemplo:
+````
+  {
+    "id": 12345,
+    "live_mode": true,
+    "type": "payment",
+    "date_created": "2015-03-25T10:04:58.396-04:00",
+    "user_id": 44444,
+    "api_version": "v1",
+    "action": "payment.created",
+    "data": {
+        "id": "1" // Este campo por enquanto será a referencia do ID do pedido.
+    }
+}
+````
+  
 Para mais informações sobre contratos/API, é possível acessar através do swagger, como mencionado na seção [como visualizar o swagger](#como-visualizar-o-swagger).
 
 

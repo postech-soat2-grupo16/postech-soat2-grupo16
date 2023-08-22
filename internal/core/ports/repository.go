@@ -29,3 +29,7 @@ type ItemRepository interface {
 	GetAll() ([]domain.Item, error)
 	GetByCategory(category string) ([]domain.Item, error)
 }
+
+type MercadoPagoRepository interface {
+	GetPedidoIDByPaymentID(paymentID string) (uint32, error)
+}

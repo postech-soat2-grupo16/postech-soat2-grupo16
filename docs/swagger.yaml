@@ -39,6 +39,28 @@ definitions:
       updated_at:
         type: string
     type: object
+  pedido.PaymentCallback:
+    properties:
+      action:
+        type: string
+      api_version:
+        type: string
+      data:
+        properties:
+          id:
+            type: string
+        type: object
+      date_created:
+        type: string
+      id:
+        type: integer
+      live_mode:
+        type: boolean
+      type:
+        type: string
+      user_id:
+        type: integer
+    type: object
   pedido.Pedido:
     properties:
       clienteId:
@@ -282,6 +304,28 @@ paths:
       summary: Update a item
       tags:
       - Items
+  /pagamentos/mp-callback:
+    post:
+      operationId: receive-callback
+      parameters:
+      - description: Order data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pedido.PaymentCallback'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "400":
+          description: Bad Request
+      summary: Receive payment callback from MercadoPago
+      tags:
+      - Orders
   /pedidos:
     get:
       operationId: get-all-orders

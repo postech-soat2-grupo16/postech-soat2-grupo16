@@ -24,6 +24,7 @@ func NewHandler(useCase ports.PedidoUseCase, r *chi.Mux) *Handler {
 		r.Get("/{id}", handler.GetByID)
 		r.Put("/{id}", handler.Update)
 		r.Delete("/{id}", handler.Delete)
+		r.Post("/mp-webhook", handler.PaymentWebhookCreate)
 	})
 	return &handler
 }
@@ -132,6 +133,42 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(pedido)
+}
+
+// @Summary	Receive payment callback from MercadoPago
+//
+// @Tags		Orders
+//
+// @ID			receive-callback
+// @Produce	json
+// @Param		data	body		PaymentCallback	true	"Order data"
+// @Success	200		{object}	Pedido
+// @Failure	400
+// @Router		/pagamentos/mp-callback [post]
+func (h *Handler) PaymentWebhookCreate(w http.ResponseWriter, r *http.Request) {
+	var payment PaymentCallback
+	err := json.NewDecoder(r.Body).Decode(&payment)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	pagamento, err := h.useCase.UpdatePaymentStatusByPaymentID(payment.Data.ID)
+	if err != nil {
+		if util.IsDomainError(err) {
+			w.WriteHeader(http.StatusUnprocessableEntity)
+			json.NewEncoder(w).Encode(err)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if pagamento == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(pagamento)
 }
 
 // @Summary	Update a order

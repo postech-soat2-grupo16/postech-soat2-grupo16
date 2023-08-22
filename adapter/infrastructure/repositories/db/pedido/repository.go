@@ -31,6 +31,10 @@ func (p *Repository) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedi
 	for i := range pedido.Items {
 		pedido.Items[i].PedidoID = pedidoID
 	}
+
+	for pa := range pedido.Pagamentos {
+		pedido.Pagamentos[pa].PedidoID = pedidoID
+	}
 	result := p.orm.Session(&gorm.Session{FullSaveAssociations: false}).Updates(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)

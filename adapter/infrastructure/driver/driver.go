@@ -8,9 +8,10 @@ import (
 	clienteHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/cliente"
 	itemHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/item"
 	pedidoHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/pedido"
-	clienterepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/cliente"
-	itemrepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/item"
-	pedidorepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/pedido"
+	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/api"
+	clienterepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/cliente"
+	itemrepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/item"
+	pedidorepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/pedido"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/cliente"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/item"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/pedido"
@@ -43,9 +44,10 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	pedidoRepository := pedidorepo.NewRepository(orm)
 	clienteRepository := clienterepo.NewRepository(orm)
 	itemRepository := itemrepo.NewRepository(orm)
+	mercadoPagoRepository := api.NewMercadoPagoAPIRepository()
 	// Use cases
 	itemUseCase := item.NewUseCase(itemRepository)
-	pedidoUseCase := pedido.NewUseCase(pedidoRepository)
+	pedidoUseCase := pedido.NewUseCase(pedidoRepository, mercadoPagoRepository)
 	clienteUseCase := cliente.NewUseCase(clienteRepository)
 	// Handlers
 	_ = itemHandler.NewHandler(itemUseCase, r)

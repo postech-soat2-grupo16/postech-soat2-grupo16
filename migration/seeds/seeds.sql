@@ -1,8 +1,9 @@
 -- DELETE CURRENT DATA
-DELETE FROM clientes;
 DELETE FROM pedido_items;
-DELETE FROM items;
+DELETE FROM pagamentos;
 DELETE FROM pedidos;
+DELETE FROM clientes;
+DELETE FROM items;
 
 TRUNCATE pagamentos, clientes, pedidos, items, pedido_items RESTART IDENTITY;
 

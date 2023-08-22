@@ -353,6 +353,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/pagamentos/mp-callback": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Receive payment callback from MercadoPago",
+                "operationId": "receive-callback",
+                "parameters": [
+                    {
+                        "description": "Order data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pedido.PaymentCallback"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
         "/pedidos": {
             "get": {
                 "produces": [
@@ -610,6 +644,40 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "pedido.PaymentCallback": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "api_version": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "date_created": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "live_mode": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

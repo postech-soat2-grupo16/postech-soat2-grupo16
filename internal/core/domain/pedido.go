@@ -12,9 +12,8 @@ const (
 	StatusPedidoEmPreparacao = "EM_PREPARACAO"
 	StatusPedidoPronto       = "PRONTO"
 	StatusPedidoEntregue     = "ENTREGUE"
-
-	StatusPagamentoAprovado = "APROVADO"
-	StatusPagamentoNegado   = "NEGADO"
+	StatusPagamentoAprovado  = "APROVADO"
+	StatusPagamentoNegado    = "NEGADO"
 )
 
 type Pedido struct {

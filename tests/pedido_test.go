@@ -187,6 +187,47 @@ func TestSavePedidos(t *testing.T) {
 		}
 	})
 
+	t.Run("given_valid_pedido_should_receive_webhook_from_mercadopago", func(t *testing.T) {
+		webHook := pedido.PaymentCallback{
+			Data: struct {
+				ID string `json:"id"`
+			}{
+				"1",
+			},
+		}
+
+		jsonWh, err := json.Marshal(webHook)
+		if err != nil {
+			t.Fatalf("could not marshal webhook: %v", err)
+		}
+
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/pedidos/mp-webhook", baseURL), bytes.NewBuffer(jsonWh))
+		if err != nil {
+			t.Fatalf("could not create request: %v", err)
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatalf("could not send request: %v", err)
+		}
+		defer res.Body.Close()
+
+		if res.StatusCode != http.StatusCreated {
+			t.Fatalf("expected status Created; got %s", res.Status)
+		}
+
+		var response domain.Pedido
+		log.Printf("%+v", response)
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			t.Fatalf("could not parse response: %v", err)
+		}
+
+		if len(response.Pagamentos) == 0 {
+			t.Fatalf("expected a list of pagamentos; got 0")
+		}
+	})
+
 	t.Run("given_existing_pedido_id_should_update_pedido", func(t *testing.T) {
 		newNote := "Pedido atualizado"
 		orderID := 1
