@@ -176,7 +176,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 // @Param		data	body		PaymentCallback	true	"Order data"
 // @Success	200		{object}	Pedido
 // @Failure	400
-// @Router		/pagamentos/mp-callback [post]
+// @Router		/pagamentos/mp-webhook [post]
 func (h *Handler) PaymentWebhookCreate(w http.ResponseWriter, r *http.Request) {
 	var payment PaymentCallback
 	err := json.NewDecoder(r.Body).Decode(&payment)

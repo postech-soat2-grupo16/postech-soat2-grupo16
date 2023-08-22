@@ -304,7 +304,7 @@ paths:
       summary: Update a item
       tags:
       - Items
-  /pagamentos/mp-callback:
+  /pagamentos/mp-webhook:
     post:
       operationId: receive-callback
       parameters:

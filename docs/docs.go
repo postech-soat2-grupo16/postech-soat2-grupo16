@@ -353,7 +353,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/pagamentos/mp-callback": {
+        "/pagamentos/mp-webhook": {
             "post": {
                 "produces": [
                     "application/json"
