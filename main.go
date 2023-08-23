@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver"
+	"github.com/joaocampari/postech-soat2-grupo16/api"
 	_ "github.com/joaocampari/postech-soat2-grupo16/docs"
 	_ "github.com/lib/pq"
 )
@@ -22,8 +22,8 @@ import (
 // @license.name	Apache 2.0
 // @license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
-	db := driver.SetupDB()
-	r := driver.SetupRouter(db)
+	db := api.SetupDB()
+	r := api.SetupRouter(db)
 
 	server := &http.Server{
 		Addr:              ":8000",

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver"
+	"github.com/joaocampari/postech-soat2-grupo16/api"
 	"github.com/joaocampari/postech-soat2-grupo16/tests/tutils"
 )
 
@@ -21,8 +21,8 @@ func TestMain(m *testing.M) {
 
 func setup() *http.Server {
 	os.Setenv("DATABASE_URL", "host=localhost user=postgres password=postgres dbname=fastfood_db sslmode=disable TimeZone=UTC")
-	db := driver.SetupDB()
-	r := driver.SetupRouter(db)
+	db := api.SetupDB()
+	r := api.SetupRouter(db)
 
 	server := http.Server{
 		Handler: r,
