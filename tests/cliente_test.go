@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/cliente"
-
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
+	"github.com/joaocampari/postech-soat2-grupo16/adapters/cliente"
+	"github.com/joaocampari/postech-soat2-grupo16/entities"
 )
 
 func TestGetClientes(t *testing.T) {
@@ -29,7 +28,7 @@ func TestGetClientes(t *testing.T) {
 			t.Fatalf("expected status OK; got %d", res.StatusCode)
 		}
 
-		var response []domain.Cliente
+		var response []entities.Cliente
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
@@ -56,7 +55,7 @@ func TestGetClientes(t *testing.T) {
 			t.Fatalf("expected status OK; got %d", res.StatusCode)
 		}
 
-		var response []domain.Cliente
+		var response []entities.Cliente
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
@@ -87,13 +86,13 @@ func TestGetClientes(t *testing.T) {
 			t.Fatalf("expected status OK; got %v", res.Status)
 		}
 
-		var response domain.Cliente
+		var response entities.Cliente
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Cliente{}) {
+		if response == (entities.Cliente{}) {
 			t.Fatal("expected a cliente; got 0")
 		}
 	})
@@ -143,13 +142,13 @@ func TestGetClientes(t *testing.T) {
 			t.Fatalf("expected status created; got %d", res.StatusCode)
 		}
 
-		var response domain.Cliente
+		var response entities.Cliente
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Cliente{}) {
+		if response == (entities.Cliente{}) {
 			t.Fatal("expected a cliente; got 0")
 		}
 	})
@@ -182,13 +181,13 @@ func TestGetClientes(t *testing.T) {
 			t.Fatalf("expected status OK; got %d", res.StatusCode)
 		}
 
-		var response domain.Cliente
+		var response entities.Cliente
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Cliente{}) {
+		if response == (entities.Cliente{}) {
 			t.Fatal("expected a cliente; got 0")
 		}
 

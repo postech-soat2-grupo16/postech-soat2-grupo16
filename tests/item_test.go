@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/item"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
 	"log"
 	"net/http"
 	"testing"
+
+	"github.com/joaocampari/postech-soat2-grupo16/adapters/item"
+	"github.com/joaocampari/postech-soat2-grupo16/entities"
 )
 
 func TestGetItems(t *testing.T) {
@@ -28,7 +29,7 @@ func TestGetItems(t *testing.T) {
 			t.Fatalf("OK status expected; got %v", res.Status)
 		}
 
-		var response []domain.Item
+		var response []entities.Item
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
@@ -75,7 +76,7 @@ func TestGetItems(t *testing.T) {
 			t.Fatalf("OK status expected; got %v", res.Status)
 		}
 
-		var response []domain.Item
+		var response []entities.Item
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
@@ -104,14 +105,14 @@ func TestGetItems(t *testing.T) {
 			t.Fatalf("OK status expected; got %v", res.Status)
 		}
 
-		var response domain.Item
+		var response entities.Item
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Item{}) {
+		if response == (entities.Item{}) {
 			t.Fatalf("a list of item expected; got 0")
 		}
 	})
@@ -183,13 +184,13 @@ func TestCreateItem(t *testing.T) {
 			t.Fatalf("Created Status expected; got %d", res.StatusCode)
 		}
 
-		var response domain.Item
+		var response entities.Item
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Item{}) {
+		if response == (entities.Item{}) {
 			t.Fatal("expected an item; got 0")
 		}
 	})
@@ -346,13 +347,13 @@ func TestUpdateItem(t *testing.T) {
 			t.Fatalf("OK status expected; got %d", res.StatusCode)
 		}
 
-		var response domain.Item
+		var response entities.Item
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
 		}
 
-		if response == (domain.Item{}) {
+		if response == (entities.Item{}) {
 			t.Fatal("expected an item; got 0")
 		}
 	})

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/pedido"
-	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
+	"github.com/joaocampari/postech-soat2-grupo16/adapters/pedido"
+	"github.com/joaocampari/postech-soat2-grupo16/entities"
 )
 
 func TestGetPedidos(t *testing.T) {
@@ -29,7 +29,7 @@ func TestGetPedidos(t *testing.T) {
 			t.Fatalf("expected status OK; got %s", res.Status)
 		}
 
-		var response []domain.Pedido
+		var response []entities.Pedido
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
@@ -61,7 +61,7 @@ func TestGetPedidos(t *testing.T) {
 			t.Fatalf("expected status OK; got %s", res.Status)
 		}
 
-		var response []domain.Pedido
+		var response []entities.Pedido
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
@@ -97,7 +97,7 @@ func TestGetPedidos(t *testing.T) {
 			t.Fatalf("expected status OK; got %s", res.Status)
 		}
 
-		var response domain.Pedido
+		var response entities.Pedido
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
@@ -126,7 +126,7 @@ func TestGetPedidos(t *testing.T) {
 			t.Fatalf("expected status OK; got %s", res.Status)
 		}
 
-		var response domain.Pagamento
+		var response entities.Pagamento
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			t.Fatalf("could not parse response: %v", err)
@@ -216,7 +216,7 @@ func TestSavePedidos(t *testing.T) {
 			t.Fatalf("expected status Created; got %s", res.Status)
 		}
 
-		var response domain.Pedido
+		var response entities.Pedido
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
@@ -257,7 +257,7 @@ func TestSavePedidos(t *testing.T) {
 			t.Fatalf("expected status OK; got %s", res.Status)
 		}
 
-		var response domain.Pedido
+		var response entities.Pedido
 		log.Printf("%+v", response)
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
