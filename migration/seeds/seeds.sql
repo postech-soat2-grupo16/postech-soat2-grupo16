@@ -49,4 +49,7 @@ VALUES (1, 1, 1),
 INSERT INTO pagamentos (pedido_id, amount, status)
 VALUES (3, 2, 'NEGADO'),
        (3, 2, 'APROVADO'),
-       (4, 1, 'APROVADO');
+       (5, 1, 'APROVADO'),
+       (6, 1, 'APROVADO'),
+       (7, 1, 'APROVADO'),
+       (8, 1, 'APROVADO');
