@@ -85,6 +85,10 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
 - Criação de QR code para pedido
   - A criação do QR code para pedido é realizada através do método `GET /pedidos/{id}/qr-code`, onde é possível receber o retorno do QR code para pagamento do pedido.
   - No retorno voltara um código que poderá renderizar uma imagem a partir dele em qualquer site como: https://www.qr-code-generator.com/
+- Ordenação na lista de Pedidos - `GET /pedidos`
+    - Ordena por `created_at` - recebimento/criação do pedido;
+    - Ordena por `status`, onde `Pronto > Em Preparação > Recebido`;
+    - Não lista os pedidos com status `Finalizado`.
 #### JSON de exemplo:
 ````
   {
