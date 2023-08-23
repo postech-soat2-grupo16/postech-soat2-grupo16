@@ -102,7 +102,7 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
 ````
   
 Para mais informações sobre contratos/API, é possível acessar através do swagger, como mencionado na seção [como visualizar o swagger](#como-visualizar-o-swagger).
-
+- Execução do ambiente no K8S: [Como Executar Utilizando um Cluster K8S (local)](#como-executar-utilizando-um-cluster-k8s-local)
 
 ## Como Executar
 
@@ -132,4 +132,29 @@ Este projeto conta com Swagger para especificação e documentação da API. Par
 
 Para atualizar o Swagger após a criação de um novo endpoint ou alteração de um endpoint existente, basta executar as anotações conforma a [documentação](https://github.com/swaggo/http-swagger#a-practical-example) do `swag`. E em seguida, executar a receita do makefile conforme o exemplo abaixo:
 
-`make update-docs` 
+`make update-docs`
+
+## Como Executar Utilizando um Cluster K8S (local)
+
+Para executar a aplicação em ambiente clusterizado é necessário provisionar o Docker, Minikube e Kubectl.
+- Guia de instalação do [Docker](https://docs.docker.com/engine/install/)
+- Guia de instalação do [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- Guia de instalação do [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+Após instalação, inicie um cluster:
+- `minikube start`
+
+Com o cluster disponível, execute no diretório raíz:
+- `kubectl apply -f k8s.yml`
+
+Acesse o container do banco de dados e execute as migrations:
+- `kubectl get pods`
+- `kubectl exec -it [POD-POSTGRES] -- psql -U postgres -d postgres -f ./migration/init/init.sql`
+- `kubectl exec -it [POD-POSTGRES] -- psql -U postgres -d postgres -f ./migration/seeds/seeds.sql`
+
+Acesse a aplicação:
+- `curl --location 'http://localhost/clientes'`
+
+A depender da configuração do seu ambiente de desenvolvimento, será necessário executar um port-forwarding para acessar a aplicação:
+- `kubectl port-forward service/fast-food-app-service 7080:80`
+- `curl --location 'http://localhost:7080/clientes'`
