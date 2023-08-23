@@ -12,6 +12,7 @@ const (
 	StatusPedidoEmPreparacao = "EM_PREPARACAO"
 	StatusPedidoPronto       = "PRONTO"
 	StatusPedidoEntregue     = "ENTREGUE"
+	StatusPedidoFinalizado   = "FINALIZADO"
 	StatusPagamentoAprovado  = "APROVADO"
 	StatusPagamentoNegado    = "NEGADO"
 )
@@ -28,7 +29,7 @@ type Pedido struct {
 }
 
 func (p *Pedido) IsStatusValid() bool {
-	status := []string{StatusPedidoCriado, StatusPedidoRecebido, StatusPedidoEmPreparacao, StatusPedidoPronto, StatusPedidoEntregue}
+	status := []string{StatusPedidoCriado, StatusPedidoRecebido, StatusPedidoEmPreparacao, StatusPedidoPronto, StatusPedidoEntregue, StatusPedidoFinalizado}
 	return slices.Contains(status, p.Status)
 }
 
