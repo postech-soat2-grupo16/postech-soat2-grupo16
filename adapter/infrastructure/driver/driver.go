@@ -8,14 +8,20 @@ import (
 	clienteHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/cliente"
 	itemHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/item"
 	pedidoHandler "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/driver/pedido"
-	clienterepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/cliente"
-	itemrepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/item"
-	pedidorepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/pedido"
+	"github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/api"
+	clienterepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/cliente"
+	itemrepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/item"
+	pedidorepo "github.com/joaocampari/postech-soat2-grupo16/adapter/infrastructure/repositories/db/pedido"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/cliente"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/item"
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/usecases/pedido"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/gorm"
+)
+
+const (
+	// This is only a test token, not a real one and will be remove in the future replacing by a secret service.
+	authToken = "TEST-8788837371574102-082018-c29a1c5da797dbf70a8c99b842da2850-144255706"
 )
 
 func SetupDB() *gorm.DB {
@@ -43,9 +49,10 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	pedidoRepository := pedidorepo.NewRepository(orm)
 	clienteRepository := clienterepo.NewRepository(orm)
 	itemRepository := itemrepo.NewRepository(orm)
+	mercadoPagoRepository := api.NewMercadoPagoAPIRepository(authToken)
 	// Use cases
 	itemUseCase := item.NewUseCase(itemRepository)
-	pedidoUseCase := pedido.NewUseCase(pedidoRepository)
+	pedidoUseCase := pedido.NewUseCase(pedidoRepository, mercadoPagoRepository)
 	clienteUseCase := cliente.NewUseCase(clienteRepository)
 	// Handlers
 	_ = itemHandler.NewHandler(itemUseCase, r)

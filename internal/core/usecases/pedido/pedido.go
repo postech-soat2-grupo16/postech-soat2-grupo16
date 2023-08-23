@@ -9,11 +9,12 @@ import (
 )
 
 type UseCase struct {
-	pedidoRepository ports.PedidoRepository
+	pedidoRepository      ports.PedidoRepository
+	mercadoPagoRepository ports.MercadoPagoRepository
 }
 
-func NewUseCase(repo ports.PedidoRepository) UseCase {
-	return UseCase{pedidoRepository: repo}
+func NewUseCase(repo ports.PedidoRepository, mercadoPagoRepository ports.MercadoPagoRepository) UseCase {
+	return UseCase{pedidoRepository: repo, mercadoPagoRepository: mercadoPagoRepository}
 }
 
 func (p UseCase) List(status string) (pedidos []domain.Pedido, err error) {
@@ -31,6 +32,23 @@ func (p UseCase) Create(pedido domain.Pedido) (*domain.Pedido, error) {
 	return p.pedidoRepository.Save(pedido)
 }
 
+func (p UseCase) CreateQRCode(pedidoID uint32) (*string, error) {
+	pedido, err := p.pedidoRepository.GetByID(pedidoID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	qrCode, err := p.mercadoPagoRepository.CreateQRCodeForPedido(*pedido)
+	if err != nil {
+		return nil, err
+	}
+
+	return &qrCode, nil
+}
+
 func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	pedido, err := p.pedidoRepository.GetByID(pedidoID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -38,6 +56,43 @@ func (p UseCase) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	}
 
 	return pedido, nil
+}
+
+func (p UseCase) GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error) {
+	lastPayment, err := p.pedidoRepository.GetLastPaymentStatus(pedidoID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
+	return lastPayment, nil
+}
+
+func (p UseCase) UpdatePaymentStatusByPaymentID(pagamentoID string) (*domain.Pedido, error) {
+	pedidoID, err := p.mercadoPagoRepository.GetPedidoIDByPaymentID(pagamentoID)
+	if err != nil {
+		return nil, err
+	}
+	pedido, err := p.pedidoRepository.GetByID(pedidoID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	pedido.Status = domain.StatusPedidoEmPreparacao
+
+	pedido.Pagamentos = append(pedido.Pagamentos, domain.Pagamento{
+		Amount: pedido.GetAmount(),
+		Status: domain.StatusPagamentoAprovado,
+	})
+
+	pedido, err = p.pedidoRepository.Update(pedidoID, *pedido)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
+	return p.pedidoRepository.GetByID(pedidoID)
 }
 
 func (p UseCase) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error) {

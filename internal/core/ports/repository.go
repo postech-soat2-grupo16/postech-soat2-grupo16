@@ -9,6 +9,7 @@ type PedidoRepository interface {
 	Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedido, error)
 	Delete(pedidoID uint32) error
 	GetByID(pedidoID uint32) (*domain.Pedido, error)
+	GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error)
 	GetAll(conds ...interface{}) ([]domain.Pedido, error)
 }
 
@@ -27,4 +28,9 @@ type ItemRepository interface {
 	GetByID(itemID uint32) (*domain.Item, error)
 	GetAll() ([]domain.Item, error)
 	GetByCategory(category string) ([]domain.Item, error)
+}
+
+type MercadoPagoRepository interface {
+	GetPedidoIDByPaymentID(paymentID string) (uint32, error)
+	CreateQRCodeForPedido(pedido domain.Pedido) (string, error)
 }

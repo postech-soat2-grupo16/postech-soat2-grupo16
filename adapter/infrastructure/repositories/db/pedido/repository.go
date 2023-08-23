@@ -31,6 +31,10 @@ func (p *Repository) Update(pedidoID uint32, pedido domain.Pedido) (*domain.Pedi
 	for i := range pedido.Items {
 		pedido.Items[i].PedidoID = pedidoID
 	}
+
+	for pa := range pedido.Pagamentos {
+		pedido.Pagamentos[pa].PedidoID = pedidoID
+	}
 	result := p.orm.Session(&gorm.Session{FullSaveAssociations: false}).Updates(&pedido)
 	if result.Error != nil {
 		log.Println(result.Error)
@@ -56,7 +60,7 @@ func (p *Repository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	pedido := domain.Pedido{
 		ID: pedidoID,
 	}
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").First(&pedido)
+	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Preload("Pagamentos").First(&pedido)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -64,8 +68,22 @@ func (p *Repository) GetByID(pedidoID uint32) (*domain.Pedido, error) {
 	return &pedido, nil
 }
 
+func (p *Repository) GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, error) {
+	pagamento := domain.Pagamento{
+		PedidoID: pedidoID,
+	}
+	result := p.orm.Preload(clause.Associations).Where("pedido_id = ?", pedidoID).Last(&pagamento)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &pagamento, nil
+}
+
 func (p *Repository) GetAll(conds ...interface{}) (pedidos []domain.Pedido, err error) {
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}}).Find(&pedidos, conds...)
+	result := p.orm.Preload(clause.Associations).Preload("Items.Item").
+		Preload("Pagamentos").
+		Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}}).Find(&pedidos, conds...)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return pedidos, result.Error
