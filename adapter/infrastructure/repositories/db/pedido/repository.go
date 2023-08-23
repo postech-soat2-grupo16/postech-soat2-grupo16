@@ -1,6 +1,7 @@
 package pedido
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/joaocampari/postech-soat2-grupo16/internal/core/domain"
@@ -81,9 +82,21 @@ func (p *Repository) GetLastPaymentStatus(pedidoID uint32) (*domain.Pagamento, e
 }
 
 func (p *Repository) GetAll(conds ...interface{}) (pedidos []domain.Pedido, err error) {
-	result := p.orm.Preload(clause.Associations).Preload("Items.Item").
+	expressionOrderBy := fmt.Sprintf(
+		"created_at, CASE status WHEN '%s' THEN 1 WHEN '%s' THEN 2 WHEN '%s' THEN 3 ELSE 4 END",
+		domain.StatusPedidoPronto,
+		domain.StatusPedidoEmPreparacao,
+		domain.StatusPedidoRecebido,
+	)
+
+	result := p.orm.Debug().Preload(clause.Associations).Preload("Items.Item").
 		Preload("Pagamentos").
-		Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}}).Find(&pedidos, conds...)
+		Where("status != ?", domain.StatusPedidoFinalizado).
+		Clauses(clause.OrderBy{Expression: clause.Expr{
+			SQL:                expressionOrderBy,
+			WithoutParentheses: true,
+		}}).
+		Find(&pedidos, conds...)
 	if result.Error != nil {
 		log.Println(result.Error)
 		return pedidos, result.Error
