@@ -48,3 +48,16 @@ app-logs: ## Show application logs
 .PHONY: update-docs
 update-docs: ## Update swagger docs
 	@swag init -d ./  --parseDependency --parseInternal --parseDepth 2 -o docs
+
+.PHONY: k8s-apply
+k8s-apply: ## Apply kubernetes resources
+	@kubectl apply -f k8s.yml
+
+.PHONY: get-pod
+get-pod:
+	@export POD_POSTGRES=$$(kubectl get pods -l app=postgres -o jsonpath='{.items[0].metadata.name}')
+
+.PHONY: exec-migration
+exec-migration: get-pod ## Execute migration in kubernetes
+	@kubectl exec -it $$POD_POSTGRES -- psql -U postgres -d postgres -f ./migration/init.sql
+	@kubectl exec -it $$POD_POSTGRES -- psql -U postgres -d postgres -f ./migration/migration.sql

@@ -5,8 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN go get -d -v ./...
-RUN go build -o api .
+RUN go build -o build .
 
 EXPOSE 8000
 
-CMD ["./api"]
+CMD ["./build"]
