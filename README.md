@@ -153,8 +153,8 @@ Com o cluster disponível, execute no diretório raíz:
 
 Acesse o container do banco de dados e execute as migrations:
 - `kubectl get pods`
-- `kubectl exec -it [POD-POSTGRES] -- psql -U postgres -d postgres -f ./migration/init/init.sql`
-- `kubectl exec -it [POD-POSTGRES] -- psql -U postgres -d postgres -f ./migration/seeds/seeds.sql`
+- `make migrate-k8s`
+- `make seeds-k8s`
 
 Acesse a aplicação:
 - `curl --location 'http://localhost/clientes'`

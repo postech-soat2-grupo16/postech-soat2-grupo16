@@ -1,3 +1,7 @@
+POD_LABEL_SELECTOR = app=postgres
+LOCAL_SQL_FILE = ./migration/init/init.sql
+SEED_SQL_FILE = ./migration/seeds/seeds.sql
+
 .PHONY: help
 help: ## Display this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -53,11 +57,16 @@ update-docs: ## Update swagger docs
 k8s-apply: ## Apply kubernetes resources
 	@kubectl apply -f k8s.yml
 
-.PHONY: get-pod
+.PHONY: exec-migration
 get-pod:
 	@export POD_POSTGRES=$$(kubectl get pods -l app=postgres -o jsonpath='{.items[0].metadata.name}')
 
-.PHONY: exec-migration
-exec-migration: get-pod ## Execute migration in kubernetes
-	@kubectl exec -it $$POD_POSTGRES -- psql -U postgres -d postgres -f ./migration/init.sql
-	@kubectl exec -it $$POD_POSTGRES -- psql -U postgres -d postgres -f ./migration/migration.sql
+.PHONY: migrate-k8s
+migrate-k8s:
+	@POD_NAME=$$(kubectl get pods -l $(POD_LABEL_SELECTOR) -o jsonpath='{.items[0].metadata.name}'); \
+    cat $(LOCAL_SQL_FILE) | kubectl exec -i $$POD_NAME -- /bin/bash -c "psql -U postgres -d fastfood_db"
+
+.PHONY: seeds-k8s
+seeds-k8s:
+	@POD_NAME=$$(kubectl get pods -l $(POD_LABEL_SELECTOR) -o jsonpath='{.items[0].metadata.name}'); \
+    cat $(SEED_SQL_FILE) | kubectl exec -i $$POD_NAME -- /bin/bash -c "psql -U postgres -d fastfood_db"
