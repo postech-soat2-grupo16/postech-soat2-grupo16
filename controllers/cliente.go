@@ -31,7 +31,7 @@ func NewClienteController(useCase interfaces.ClienteUseCase, r *chi.Mux) *Client
 // @Tags		Clients
 // @ID			get-all-clients
 // @Produce	json
-// @Success	200	{object}	Cliente
+// @Success	200	{object}	cliente2.Cliente
 // @Param       cpf  query       string  false   "Optional Filter by CPF"
 // @Failure	500
 // @Router		/clientes [get]
@@ -53,7 +53,7 @@ func (c *ClienteController) GetAll() http.HandlerFunc {
 // @ID			get-client-by-id
 // @Produce	json
 // @Param		id	path		string	true	"Client ID"
-// @Success	200	{object}	Cliente
+// @Success	200	{object}	cliente2.Cliente
 // @Failure	404
 // @Router		/clientes/{id} [get]
 func (c *ClienteController) GetByID() http.HandlerFunc {
@@ -82,8 +82,8 @@ func (c *ClienteController) GetByID() http.HandlerFunc {
 //
 // @ID			create-client
 // @Produce	json
-// @Param		data	body		Cliente	true	"Client data"
-// @Success	200		{object}	Cliente
+// @Param		data	body		cliente2.Cliente	true	"Client data"
+// @Success	200		{object}	cliente2.Cliente
 // @Failure	400
 // @Router		/clientes [post]
 func (c *ClienteController) Create() http.HandlerFunc {
@@ -116,8 +116,8 @@ func (c *ClienteController) Create() http.HandlerFunc {
 // @ID			update-client
 // @Produce	json
 // @Param		id		path		string	true	"Client ID"
-// @Param		data	body		Cliente	true	"Client data"
-// @Success	200		{object}	Cliente
+// @Param		data	body		cliente2.Cliente	true	"Client data"
+// @Success	200		{object}	cliente2.Cliente
 // @Failure	404
 // @Failure	400
 // @Router		/clientes/{id} [put]

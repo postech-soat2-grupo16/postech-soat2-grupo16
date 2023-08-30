@@ -102,6 +102,19 @@ func (p UseCase) Update(pedidoID uint32, pedido entities.Pedido) (*entities.Pedi
 	return p.pedidoGateway.Update(pedidoID, pedido)
 }
 
+func (p UseCase) UpdatePedidoStatus(pedidoID uint32, pedidoStatus string) (*entities.Pedido, error) {
+	pedido, err := p.pedidoGateway.GetByID(pedidoID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	pedido.Status = pedidoStatus
+	return p.pedidoGateway.Update(pedidoID, *pedido)
+}
+
 func (p UseCase) Delete(pedidoID uint32) error {
 	return p.pedidoGateway.Delete(pedidoID)
 }

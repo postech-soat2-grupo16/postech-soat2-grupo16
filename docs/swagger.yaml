@@ -73,6 +73,8 @@ definitions:
         type: array
       notes:
         type: string
+      status:
+        type: string
     type: object
 info:
   contact:
@@ -304,28 +306,6 @@ paths:
       summary: Update a item
       tags:
       - Items
-  /pagamentos/mp-webhook:
-    post:
-      operationId: receive-callback
-      parameters:
-      - description: Order data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/pedido.PaymentCallback'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/pedido.Pedido'
-        "400":
-          description: Bad Request
-      summary: Receive payment callback from MercadoPago
-      tags:
-      - Orders
   /pedidos:
     get:
       operationId: get-all-orders
@@ -406,6 +386,34 @@ paths:
       summary: Get a order by ID
       tags:
       - Orders
+    patch:
+      operationId: update-status-order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Pedido with updated status
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pedido.Pedido'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Patch status of a order
+      tags:
+      - Orders
     put:
       operationId: update-order
       parameters:
@@ -474,6 +482,28 @@ paths:
         "404":
           description: Not Found
       summary: Get QR Code pedido
+      tags:
+      - Orders
+  /pedidos/mp-webhook:
+    post:
+      operationId: receive-callback
+      parameters:
+      - description: Order data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pedido.PaymentCallback'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pedido.Pedido'
+        "400":
+          description: Bad Request
+      summary: Receive payment callback from MercadoPago
       tags:
       - Orders
 swagger: "2.0"

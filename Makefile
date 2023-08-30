@@ -51,11 +51,11 @@ app-logs: ## Show application logs
 
 .PHONY: update-docs
 update-docs: ## Update swagger docs
-	@swag init -d ./  --parseDependency --parseInternal --parseDepth 2 -o docs
+	@swag init -d ./  --parseDependency --parseDepth 4  -o docs
 
 .PHONY: k8s-apply
 k8s-apply: ## Apply kubernetes resources
-	@kubectl apply -f k8s.yml
+	@kubectl apply -f k8s.yml --insecure-skip-tls-verify
 
 .PHONY: exec-migration
 get-pod:

@@ -11,6 +11,7 @@ type Pedido struct {
 	Items     []Item `json:"items"`
 	Notes     string `json:"notes"`
 	ClienteID uint32 `json:"clienteId"`
+	Status    string `json:"status"`
 }
 
 type Item struct {

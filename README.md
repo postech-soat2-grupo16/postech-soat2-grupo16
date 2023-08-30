@@ -98,7 +98,7 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
 ### Fase 2
 Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entrega dos requisitos (APIs) solicitados nesta fase:
 - Atualização do status do pedido
-    - A atualização do status do pedido é realizada através do método `PUT /pedidos/{id}`, onde o status pode ser atualizado.
+  - A atualização do status do pedido é realizada através do método `PATCH /pedidos/{id}`, onde é possivel passar o novo status do pedido.
 - Webhook para notificação de pagamento do pedido
     - O webhook para notificação de pagamento do pedido é realizado através do método `POST /pedidos/mp-webhook`, onde é possível receber o retorno do pagamento e atualizar o status do pedido para `PAGO`
     #### JSON de exemplo:
@@ -123,6 +123,9 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
     - Ordena por `created_at` - recebimento/criação do pedido;
     - Ordena por `status`, onde `Pronto > Em Preparação > Recebido`;
     - Não lista os pedidos com status `Finalizado`.
+- Consultar status do pagamento do pedido
+  - A consulta do status do pagamento do pedido é realizada através do método `GET /pedidos/{id}/pagamentos/status`, onde é possível receber o retorno do status do pagamento do pedido.
+  - Caso volte 404, é necessário que faça a criação de um novo pagamento utilizando o webhook.
   
 Para mais informações sobre contratos/API, é possível acessar através do swagger, como mencionado na seção [como visualizar o swagger](#como-visualizar-o-swagger).
 - Execução do ambiente no K8S: [Como Executar Utilizando um Cluster K8S (local)](#como-executar-utilizando-um-cluster-k8s-local)
@@ -168,7 +171,11 @@ Após instalação, inicie um cluster:
 - `minikube start`
 
 Com o cluster disponível, execute no diretório raíz:
-- `kubectl apply -f k8s.yml`
+- `kubectl apply -f k8s.yml --insecure-skip-tls-verify`
+- Observação: o uso do insecure-skip-tls-verify é necessário para execução local, pois o certificado utilizado na criação QR Code é auto-assinado.
+
+Para executar o load-balancer (opcional para execução local):
+- `kubectl apply -f k8s-load-balancer.yml`
 
 Acesse o container do banco de dados e execute as migrations:
 - `kubectl get pods`
@@ -179,5 +186,5 @@ Acesse a aplicação:
 - `curl --location 'http://localhost/clientes'`
 
 A depender da configuração do seu ambiente de desenvolvimento, será necessário executar um port-forwarding para acessar a aplicação:
-- `kubectl port-forward service/fast-food-app-service 7080:80`
-- `curl --location 'http://localhost:7080/clientes'`
+- `kubectl port-forward service/fast-food-app-service 8000:80`
+- `curl --location 'http://localhost:8000/clientes'`

@@ -27,6 +27,7 @@ func NewPedidoController(useCase interfaces.PedidoUseCase, r *chi.Mux) *PedidoCo
 		r.Put("/{id}", controller.Update)
 		r.Delete("/{id}", controller.Delete)
 		r.Post("/mp-webhook", controller.PaymentWebhookCreate)
+		r.Patch("/{id}", controller.PatchPedidoStatus)
 	})
 	return &controller
 }
@@ -38,7 +39,7 @@ func NewPedidoController(useCase interfaces.PedidoUseCase, r *chi.Mux) *PedidoCo
 // @ID			get-all-orders
 // @Produce	json
 // @Param       status  query       string  false   "Optional Filter by Status"
-// @Success	200	{object}	Pedido
+// @Success	200	{object}	pedido2.Pedido
 // @Failure	500
 // @Router		/pedidos [get]
 func (c *PedidoController) GetAll(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +58,7 @@ func (c *PedidoController) GetAll(w http.ResponseWriter, r *http.Request) {
 // @ID			get-order-by-id
 // @Produce	json
 // @Param		id	path		string	true	"Order ID"
-// @Success	200	{object}	Pedido
+// @Success	200	{object}	pedido2.Pedido
 // @Failure	404
 // @Router		/pedidos/{id} [get]
 func (c *PedidoController) GetByID(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +86,7 @@ func (c *PedidoController) GetByID(w http.ResponseWriter, r *http.Request) {
 // @ID			get-qr-code-by-id
 // @Produce	json
 // @Param		id	path		string	true	"Order ID"
-// @Success	200	{object}	Pedido
+// @Success	200	{object}	pedido2.Pedido
 // @Failure	404
 // @Router		/pedidos/{id}/qr-code [get]
 func (c *PedidoController) GetQRCodeByPedidoID(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +117,7 @@ func (c *PedidoController) GetQRCodeByPedidoID(w http.ResponseWriter, r *http.Re
 // @ID			get-payment-by-order-id
 // @Produce	json
 // @Param		id	path		string	true	"Order ID"
-// @Success	200	{object}	Pagamento
+// @Success	200	{object}	pedido2.Pagamento
 // @Failure	404
 // @Router		/pedidos/{id}/pagamentos/status [get]
 func (c *PedidoController) GetPaymentStatusByOrderID(w http.ResponseWriter, r *http.Request) {
@@ -143,8 +144,8 @@ func (c *PedidoController) GetPaymentStatusByOrderID(w http.ResponseWriter, r *h
 //
 // @ID			create-order
 // @Produce	json
-// @Param		data	body		Pedido	true	"Order data"
-// @Success	200		{object}	Pedido
+// @Param		data	body		pedido2.Pedido	true	"Order data"
+// @Success	200		{object}	pedido2.Pedido
 // @Failure	400
 // @Router		/pedidos [post]
 func (c *PedidoController) Create(w http.ResponseWriter, r *http.Request) {
@@ -174,10 +175,10 @@ func (c *PedidoController) Create(w http.ResponseWriter, r *http.Request) {
 //
 // @ID			receive-callback
 // @Produce	json
-// @Param		data	body		PaymentCallback	true	"Order data"
-// @Success	200		{object}	Pedido
+// @Param		data	body		pedido2.PaymentCallback	true	"Order data"
+// @Success	200		{object}	pedido2.Pedido
 // @Failure	400
-// @Router		/pagamentos/mp-webhook [post]
+// @Router		/pedidos/mp-webhook [post]
 func (c *PedidoController) PaymentWebhookCreate(w http.ResponseWriter, r *http.Request) {
 	var payment pedido2.PaymentCallback
 	err := json.NewDecoder(r.Body).Decode(&payment)
@@ -211,8 +212,8 @@ func (c *PedidoController) PaymentWebhookCreate(w http.ResponseWriter, r *http.R
 // @ID			update-order
 // @Produce	json
 // @Param		id		path		string	true	"Order ID"
-// @Param		data	body		Pedido	true	"Order data"
-// @Success	200		{object}	Pedido
+// @Param		data	body		pedido2.Pedido	true	"Order data"
+// @Success	200		{object}	pedido2.Pedido
 // @Failure	404
 // @Failure	400
 // @Router		/pedidos/{id} [put]
@@ -230,6 +231,49 @@ func (c *PedidoController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pedido, err := c.useCase.Update(uint32(id), p.ToDomain())
+	if err != nil {
+		if util.IsDomainError(err) {
+			w.WriteHeader(http.StatusUnprocessableEntity)
+			json.NewEncoder(w).Encode(err)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if pedido == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(pedido)
+}
+
+// @Summary	Patch status of a order
+//
+// @Tags		Orders
+//
+// @ID			update-status-order
+// @Produce	json
+// @Param		id		path		string	true	"Order ID"
+// @Param		data	body		pedido2.Pedido	true	"Pedido with updated status"
+// @Success	200		{object}	pedido2.Pedido
+// @Failure	404
+// @Failure	400
+// @Router		/pedidos/{id} [patch]
+func (c *PedidoController) PatchPedidoStatus(w http.ResponseWriter, r *http.Request) {
+	var p pedido2.Pedido
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idStr, 10, 32)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	pedido, err := c.useCase.UpdatePedidoStatus(uint32(id), p.Status)
 	if err != nil {
 		if util.IsDomainError(err) {
 			w.WriteHeader(http.StatusUnprocessableEntity)

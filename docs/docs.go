@@ -353,40 +353,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/pagamentos/mp-webhook": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Orders"
-                ],
-                "summary": "Receive payment callback from MercadoPago",
-                "operationId": "receive-callback",
-                "parameters": [
-                    {
-                        "description": "Order data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/pedido.PaymentCallback"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/pedido.Pedido"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                }
-            }
-        },
         "/pedidos": {
             "get": {
                 "produces": [
@@ -434,6 +400,40 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/pedidos/mp-webhook": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Receive payment callback from MercadoPago",
+                "operationId": "receive-callback",
+                "parameters": [
+                    {
+                        "description": "Order data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pedido.PaymentCallback"
                         }
                     }
                 ],
@@ -547,6 +547,48 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            },
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Patch status of a order",
+                "operationId": "update-status-order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Pedido with updated status",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pedido.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
@@ -729,6 +771,9 @@ const docTemplate = `{
                     }
                 },
                 "notes": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }

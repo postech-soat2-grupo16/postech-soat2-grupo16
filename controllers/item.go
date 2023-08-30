@@ -38,7 +38,7 @@ func NewItemController(useCase interfaces.ItemUseCase, r *chi.Mux) *ItemControll
 //
 //	@Produce	json
 //
-// @Success	200	{object}	Item
+// @Success	200	{object}	item2.Item
 // @Failure	500
 // @Router		/items [get]
 func (c *ItemController) GetAll() http.HandlerFunc {
@@ -69,7 +69,7 @@ func (c *ItemController) GetAll() http.HandlerFunc {
 // @ID			get-item-by-id
 // @Produce	json
 // @Param		id	path		string	true	"Item ID"
-// @Success	200	{object}	Item
+// @Success	200	{object}	item2.Item
 // @Failure	404
 // @Router		/items/{id} [get]
 func (c *ItemController) GetByID() http.HandlerFunc {
@@ -98,8 +98,8 @@ func (c *ItemController) GetByID() http.HandlerFunc {
 //
 // @ID			create-item
 // @Produce	json
-// @Param		data	body		Item	true	"Item data"
-// @Success	200		{object}	Item
+// @Param		data	body		item2.Item	true	"Item data"
+// @Success	200		{object}	item2.Item
 // @Failure	400
 // @Router		/items [post]
 func (c *ItemController) Create() http.HandlerFunc {
@@ -132,8 +132,8 @@ func (c *ItemController) Create() http.HandlerFunc {
 // @ID			update-item
 // @Produce	json
 // @Param		id		path		string	true	"Item ID"
-// @Param		data	body		Item	true	"Item data"
-// @Success	200		{object}	Item
+// @Param		data	body		item2.Item	true	"Item data"
+// @Success	200		{object}	item2.Item
 // @Failure	404
 // @Failure	400
 // @Router		/items/{id} [put]

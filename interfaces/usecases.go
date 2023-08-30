@@ -19,6 +19,7 @@ type PedidoUseCase interface {
 	GetByID(pedidoID uint32) (*entities.Pedido, error)
 	GetLastPaymentStatus(pedidoID uint32) (*entities.Pagamento, error)
 	Update(pedidoID uint32, pedido entities.Pedido) (*entities.Pedido, error)
+	UpdatePedidoStatus(pedidoID uint32, pedidoStatus string) (*entities.Pedido, error)
 	UpdatePaymentStatusByPaymentID(pagamentoID string) (*entities.Pedido, error)
 	Delete(pedidoID uint32) error
 	CreateQRCode(pedidoID uint32) (*string, error)
