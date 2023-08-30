@@ -4,12 +4,14 @@
 <p align="center">
  <a href="#sobre">Sobre</a> •
  <a href="#entregas-fase-1">Entregas Fase 1</a> •
+ <a href="#entregas-fase-2">Entregas Fase 2</a> •
  <a href="#domain-driven-development-event-storm">Sobre</a> •
  <a href="#interpretação-apis">Interpretação APIs</a> •
  <a href="#como-executar">Como Executar</a> •
  <a href="#como-executar-testes">Como Executar Testes</a> •
  <a href="#como-visualizar-o-swagger">Como Visualizar o Swagger</a> •
  <a href="#como-atualizar-o-swagger">Como Executar Testes</a> •
+ <a href="#como-executar-utilizando-um-cluster-k8s-local">Como Executar Utilizando um Cluster K8S (local)</a> •
 </p>
 
 ## Sobre
@@ -50,6 +52,23 @@ b. 1 instâncias para executar aplicação
 
 Não será necessário o desenvolvimento de interfaces para o frontend, o foco deve ser total no backend.
 
+### Entregas Fase 2
+
+1. Arquivos de configuração do Kubernetes:
+    - Deployment da aplicação com ao menos 2 Pods.
+    - Service para Load Balancer do tipo NLB ou ALB.
+    - Configuração de acesso aos serviços da AWS parametrizados via secrets.
+2. Atualizar a aplicação desenvolvida na FASE1 refatorando o código para seguir os padrões clean code e Clean Architecture.
+3. Alterar/criar as APIs
+    - Checkout do Pedido, que deverá receber os produtos solicitados e retornar a identificação do pedido.
+    - Consultar status de pagamento do pedido, que informa se o pagamento foi aprovado ou não.
+    - Webhook para receber confirmação de pagamento aprovado ou pagamento recusado.
+    - A lista de pedidos deverá retornar os pedidos com suas descrições, ordenados por recebimento e por status
+      com a seguinte prioridade: Pronto > Em Preparação > Recebido; Pedidos com status Finalizado não devem aparecer na lista.
+    - Atualizar o status do pedido. 
+    - Como desafio extra, opcionalmente, você pode implementar a integração com Mercado Pago para gerar o QR‐
+      Code para pagamento e integrar com o WebHook para capturar os pagamentos.
+
 #### Domain Driven Development Event Storm
 
 Abaixo o diagrama gerado durante o Event Storm e Dicionário de Linguagem Ubíqua, realizados como parte da entrega do projeto:
@@ -82,6 +101,21 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
     - A atualização do status do pedido é realizada através do método `PUT /pedidos/{id}`, onde o status pode ser atualizado.
 - Webhook para notificação de pagamento do pedido
     - O webhook para notificação de pagamento do pedido é realizado através do método `POST /pedidos/mp-webhook`, onde é possível receber o retorno do pagamento e atualizar o status do pedido para `PAGO`
+    #### JSON de exemplo:
+    ````
+      {
+        "id": 12345,
+        "live_mode": true,
+        "type": "payment",
+        "date_created": "2015-03-25T10:04:58.396-04:00",
+        "user_id": 44444,
+        "api_version": "v1",
+        "action": "payment.created",
+        "data": {
+            "id": "1" // Este campo por enquanto será a referencia do ID do pedido.
+        }
+    }
+    ````
 - Criação de QR code para pedido
   - A criação do QR code para pedido é realizada através do método `GET /pedidos/{id}/qr-code`, onde é possível receber o retorno do QR code para pagamento do pedido.
   - No retorno voltara um código que poderá renderizar uma imagem a partir dele em qualquer site como: https://www.qr-code-generator.com/
@@ -89,21 +123,6 @@ Nessa seção, gostaríamos de descrever como interpretamos e realizamos a entre
     - Ordena por `created_at` - recebimento/criação do pedido;
     - Ordena por `status`, onde `Pronto > Em Preparação > Recebido`;
     - Não lista os pedidos com status `Finalizado`.
-#### JSON de exemplo:
-````
-  {
-    "id": 12345,
-    "live_mode": true,
-    "type": "payment",
-    "date_created": "2015-03-25T10:04:58.396-04:00",
-    "user_id": 44444,
-    "api_version": "v1",
-    "action": "payment.created",
-    "data": {
-        "id": "1" // Este campo por enquanto será a referencia do ID do pedido.
-    }
-}
-````
   
 Para mais informações sobre contratos/API, é possível acessar através do swagger, como mencionado na seção [como visualizar o swagger](#como-visualizar-o-swagger).
 - Execução do ambiente no K8S: [Como Executar Utilizando um Cluster K8S (local)](#como-executar-utilizando-um-cluster-k8s-local)
