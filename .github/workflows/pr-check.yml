@@ -37,6 +37,10 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: fastfood_db
+        volumes:
+          - ./migration/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+          - ./migration/seeds/seeds.sql:/migration/seeds/seeds.sql
+          - postgres-data:/var/lib/postgresql/data
 
     steps:
       - name: Checkout Repository
@@ -50,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: go get -d -v ./...
 
-      - name: Wait for PostgreSQL to start
+      - name: Wait for Postgres to start
         run: |
           while ! nc -z localhost 5432; do sleep 1; done
 
