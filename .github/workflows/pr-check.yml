@@ -37,10 +37,9 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: fastfood_db
-        volumes:
-          - ./migration/init/init.sql:/docker-entrypoint-initdb.d/init.sql
-          - ./migration/seeds/seeds.sql:/migration/seeds/seeds.sql
-          - postgres-data:/var/lib/postgresql/data
+        options: >-
+          --mount type=bind,source=$(PWD)/docker-entrypoint-initdb.d,target=/docker-entrypoint-initdb.d
+          --mount type=bind,source=$(PWD)/migration/seeds,target=/migration/seeds
 
     steps:
       - name: Checkout Repository
