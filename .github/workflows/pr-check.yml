@@ -38,8 +38,8 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: fastfood_db
         options: >-
-          --mount type=bind,source=$(PWD)/docker-entrypoint-initdb.d,target=/docker-entrypoint-initdb.d
-          --mount type=bind,source=$(PWD)/migration/seeds,target=/migration/seeds
+          --mount type=bind,source=$(GITHUB_WORKSPACE)/docker-entrypoint-initdb.d,target=/docker-entrypoint-initdb.d
+          --mount type=bind,source=$(GITHUB_WORKSPACE)/migration/seeds,target=/migration/seeds
 
     steps:
       - name: Checkout Repository
