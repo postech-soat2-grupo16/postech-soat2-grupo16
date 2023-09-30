@@ -50,6 +50,14 @@ jobs:
       - name: Install dependencies
         run: go get -d -v ./...
 
+      - name: Wait for PostgreSQL to start
+        run: |
+          while ! nc -z localhost 5432; do sleep 1; done
+
       - name: Test
         run: go test -v ./...
+
+      - name: Show Postgres logs
+        run: docker logs postgres
+
 
