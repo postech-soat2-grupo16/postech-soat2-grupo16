@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  GITHUB_WORKSPACE: ${{ github.workspace }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,8 +41,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: fastfood_db
         options: >-
-          --mount type=bind,source=${{ github.workspace }}/docker-entrypoint-initdb.d,target=/docker-entrypoint-initdb.d
-          --mount type=bind,source=${{ github.workspace }}/migration/seeds,target=/migration/seeds
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --mount type=bind,source=${GITHUB_WORKSPACE}/docker-entrypoint-initdb.d,target=/docker-entrypoint-initdb.d
+          --mount type=bind,source=${GITHUB_WORKSPACE}/migration/seeds,target=/migration/seeds
 
     steps:
       - name: Checkout Repository
@@ -53,14 +60,5 @@ jobs:
       - name: Install dependencies
         run: go get -d -v ./...
 
-      - name: Wait for Postgres to start
-        run: |
-          while ! nc -z localhost 5432; do sleep 1; done
-
       - name: Test
         run: go test -v ./...
-
-      - name: Show Postgres logs
-        run: docker logs postgres
-
-
