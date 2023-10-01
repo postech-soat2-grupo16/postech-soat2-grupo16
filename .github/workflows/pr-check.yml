@@ -28,37 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
-    services:
-      postgres:
-        image: postgres:15
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: fastfood_db
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: 1.20.5
-
-      - name: Install dependencies
-        run: go get -d -v ./...
-
-      - name: Copy scripts
-        run: |
-          cp ./migration/init/init.sql /docker-entrypoint-initdb.d/
-          cp ./migration/seeds/seeds.sql /migration/seeds/
+      - name: Set up Database
+        run: make db-run
 
       - name: Test
-        run: go test -v ./...
+        run: make test
