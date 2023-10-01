@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-env:
-  GITHUB_WORKSPACE: ${{ github.workspace }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,15 +55,10 @@ jobs:
       - name: Install dependencies
         run: go get -d -v ./...
 
-      - name: Create directories
-        run: |
-          mkdir -p /github/workspace/docker-entrypoint-initdb.d
-          mkdir -p /github/workspace/migration/seeds
-
       - name: Copy scripts
         run: |
-          cp ./docker-entrypoint-initdb.d/init.sql /github/workspace/docker-entrypoint-initdb.d/
-          cp ./migration/seeds/seeds.sql /github/workspace/migration/seeds/
+          cp ./migration/init/init.sql /docker-entrypoint-initdb.d/
+          cp ./migration/seeds/seeds.sql /migration/seeds/
 
       - name: Test
         run: go test -v ./...
