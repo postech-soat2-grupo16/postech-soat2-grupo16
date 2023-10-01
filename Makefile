@@ -1,6 +1,7 @@
 POD_LABEL_SELECTOR = app=postgres
 LOCAL_SQL_FILE = ./migration/init/init.sql
 SEED_SQL_FILE = ./migration/seeds/seeds.sql
+DB_URL = postgresql://postgres:postgres@localhost:5432/fastfood_db?sslmode=disable
 
 .PHONY: help
 help: ## Display this help
@@ -70,3 +71,11 @@ migrate-k8s:
 seeds-k8s:
 	@POD_NAME=$$(kubectl get pods -l $(POD_LABEL_SELECTOR) -o jsonpath='{.items[0].metadata.name}'); \
     cat $(SEED_SQL_FILE) | kubectl exec -i $$POD_NAME -- /bin/bash -c "psql -U postgres -d fastfood_db"
+
+.PHONY: migrate-up
+migrate-up: ## Execute the database schema and seeds
+	migrate -path migration -database "$(DB_URL)" -verbose up
+
+.PHONY: migrate-drop
+migrate-drop: ## Drop the database schema
+	migrate -path migration -database "$(DB_URL)" -verbose drop
