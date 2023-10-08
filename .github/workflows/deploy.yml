@@ -41,8 +41,9 @@ jobs:
       - name: Push Docker image to Amazon ECR
         id: push-image
         run: |
-          docker tag ${{ secrets.AWS_ECR }}:${{ github.sha }} 795547851962.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR }}:${{ github.sha }}
-          docker push 795547851962.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR }}:${{ github.sha }}
+          docker tag ${{ secrets.AWS_ECR }}:${{ github.sha }} ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy to AWS ECS
