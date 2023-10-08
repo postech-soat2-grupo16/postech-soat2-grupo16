@@ -38,12 +38,15 @@ jobs:
           push: true
           tags: ${{ secrets.AWS_ECR }}:${{ github.sha }}
 
-      - name: Push Docker image to Amazon ECR
-        id: push-image
+      - name: Build, tag, and push image to Amazon ECR
+        id: docker_build_tag_push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR }}
         run: |
-          docker tag ${{ secrets.AWS_ECR }}:${{ github.sha }} ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}
-          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   deploy:
     name: Deploy to AWS ECS
