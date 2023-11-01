@@ -177,11 +177,11 @@ Após instalação, inicie um cluster:
 - `minikube start`
 
 Com o cluster disponível, execute no diretório raíz:
-- `kubectl apply -f k8s.yml --insecure-skip-tls-verify`
+- `kubectl apply -f manifests/k8s.yml --insecure-skip-tls-verify`
 - Observação: o uso do insecure-skip-tls-verify é necessário para execução local, pois o certificado utilizado na criação QR Code é auto-assinado.
 
 Para executar o load-balancer (opcional para execução local):
-- `kubectl apply -f k8s-load-balancer.yml`
+- `kubectl apply -f manifests/k8s-load-balancer.yml`
 
 Acesse o container do banco de dados e execute as migrations:
 - `kubectl get pods`
