@@ -69,6 +69,12 @@ Não será necessário o desenvolvimento de interfaces para o frontend, o foco d
     - Como desafio extra, opcionalmente, você pode implementar a integração com Mercado Pago para gerar o QR‐
       Code para pagamento e integrar com o WebHook para capturar os pagamentos.
 
+### Entregas Fase 3
+4. Justificativa da escolha do banco de dados utilizado.
+   - Optamos pelo PostgreSQL no Amazon RDS para nosso projeto devido à sua confiabilidade comprovada e rica funcionalidade de desenvolvimento. Compatível com padrões SQL, oferece a flexibilidade necessária para nossas demandas de dados. Além disso, sendo uma opção de código aberto, se encaixa perfeitamente em nosso orçamento, especialmente no tier gratuito do Amazon RDS. A escalabilidade e a ativa comunidade de suporte garantem que nosso banco de dados cresça conforme nossas necessidades. Estamos confiantes de que o PostgreSQL no Amazon RDS é a escolha ideal para nosso projeto, proporcionando uma base sólida e confiável para nosso desenvolvimento.
+   - Diagrama de banco de dados:
+   - ![Diagrama de banco de dados](./docs/srcs/db_diagram.png)
+
 #### Domain Driven Development Event Storm
 
 Abaixo o diagrama gerado durante o Event Storm e Dicionário de Linguagem Ubíqua, realizados como parte da entrega do projeto:
