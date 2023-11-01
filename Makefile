@@ -56,7 +56,7 @@ update-docs: ## Update swagger docs
 
 .PHONY: k8s-apply
 k8s-apply: ## Apply kubernetes resources
-	@kubectl apply -f k8s.yml --insecure-skip-tls-verify
+	@kubectl apply -f manifests/k8s.yml --insecure-skip-tls-verify
 
 .PHONY: exec-migration
 get-pod:
