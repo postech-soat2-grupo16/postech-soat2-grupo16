@@ -1,57 +1,64 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - name: Checkout Repository
+      - name: Code Checkout
         uses: actions/checkout@v4
 
+      #AWS CREDENTIALS
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: myGitHubActions
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'false'
 
       - name: Build, tag, and push image to Amazon ECR
         id: docker_build_tag_push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-          ECR_REPOSITORY: ${{ secrets.AWS_ECR }}
+          REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "ECR_IMAGE=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Download task definition
+      #Terraform execution
+      #Runs ECS Service
+      - name: Terraform Init
         run: |
-          aws ecs describe-task-definition --task-definition task-definition-fast-food-app --query taskDefinition > task-definition.json
+          cd terraform
+          terraform init
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task_definition
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: fast-food-app
-          image: ${{ steps.docker_build_tag_push.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task_definition.outputs.task-definition }}
-          service: ${{ secrets.AWS_ECS_SERVICE }}
-          cluster: ${{ secrets.AWS_ECS_CLUSTER }}
-          wait-for-service-stability: true
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          terraform apply -auto-approve        
+        env:
+          TF_VAR_ecr_image: ${{ env.ECR_IMAGE }}
+          TF_VAR_execution_role_ecs: ${{ secrets.ECS_EXECUTION_ROLE }}
+          TF_VAR_vpc_id: ${{ vars.VPC_ID }}
+          TF_VAR_subnet_a: ${{ vars.SUBNET_A }}
+          TF_VAR_subnet_b: ${{ vars.SUBNET_B }}
+          TF_VAR_sg_load_balancer: ${{ vars.SG_LOAD_BALANCER }}
+          TF_VAR_ecs_cluster: ${{ vars.ECS_CLUSTER }}
+          TF_VAR_sg_cluster_ecs: ${{ vars.SG_CLUSTER_ECS }}
+          TF_VAR_target_group_arn: ${{ vars.TARGET_GROUP_ARN }}
+          TF_VAR_db_url: ${{ secrets.DB_URL }}
