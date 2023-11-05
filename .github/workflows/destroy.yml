@@ -1,0 +1,42 @@
+name: Destroy API Infra
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy-api-infra:
+    name: Destroy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      #AWS CREDENTIALS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION}}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: myGitHubActions
+      #Terraform execution
+      - name: Terraform Init
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          terraform apply -auto-approve   
+        env:
+            TF_VAR_execution_role_ecs: ${{ secrets.ECS_EXECUTION_ROLE }}
+            TF_VAR_vpc_id: ${{ vars.VPC_ID }}
+            TF_VAR_subnet_a: ${{ vars.SUBNET_A }}
+            TF_VAR_subnet_b: ${{ vars.SUBNET_B }}
+            TF_VAR_sg_load_balancer: ${{ vars.SG_LOAD_BALANCER }}
+            TF_VAR_ecs_cluster: ${{ vars.ECS_CLUSTER }}
+            TF_VAR_sg_cluster_ecs: ${{ vars.SG_CLUSTER_ECS }}
+            TF_VAR_target_group_arn: ${{ vars.TARGET_GROUP_ARN }}
+            TF_VAR_db_url: ${{ secrets.DB_URL }}
